@@ -20,20 +20,42 @@ https://hackaday.com/2022/09/28/the-first-microcomputer-the-q1/
 
 https://www.1000bit.it/scheda.asp?id=2409
 
+http://www.datormuseum.se/contact.html
 
-Collaborators
--------------
+People
+------
 
-Karl-Wilhelm Wacker (kwwacker@ptd.net) used to work for the Q1 corporation.
+.. list-table:: People
+   :header-rows: 1
 
-Mattis Lind (http://www.datormuseum.se/contact.html)
+   * - Name
+     - URL/email
+     - Role
+   * - Karl-Wilhelm Wacker
+     - kwwacker@ptd.net
+     - Former employee at Q1 corporation
+   * - Mattis Lind
+     - http://www.datormuseum.se/contact.html
+     - Work on restoring data from old floppy disks
+   * - Morten Jagd Christensen
+     - https://www.jcaps.com
+     - Works on the Q1 Emulator
+   * - Peter Andersen
+     - https://www.peel.dk/Q1/
+     - Q1 history, manual and ROM archive
+   * - Poul-Henning Kamp
+     - https://phk.freebsd.dk/
+     - Work on Q1 floppy disk digitisation
+   * - Roland Langfeld
+     - R.Langfeld@t-online.de
+     - technikum29 computer museum
 
 
 Manuals
 -------
 
-If the scanned manuals contain page numbers I will always refer to these. If
-not I will instead refer to the page count of the pdf document itself.
+If the scanned manuals contain page numbers, I will always refer to these. If
+not, I will instead refer to the page count of the pdf document itself.
 
 .. list-table:: Documentation from TheByteAttic
    :header-rows: 1
