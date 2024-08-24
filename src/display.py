@@ -15,7 +15,7 @@ def txudp(message):
 
 class Display:
 
-    def __init__(self, height=24, width=40):
+    def __init__(self, height=12, width=40):
         self.w = width
         self.h = height
         self.pos = (0,0)

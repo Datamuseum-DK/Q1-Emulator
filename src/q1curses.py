@@ -1,8 +1,10 @@
 import curses
 import socket
 
+width = 40
+height = 12
 stdscr = curses.initscr()
-curses.resize_term(26, 42)
+curses.resize_term(height+2, width+2)
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
@@ -12,11 +14,11 @@ sock.bind((UDP_IP, UDP_PORT))
 
 
 def main(stdscr):
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
     stdscr.clear()
     stdscr.border()
-    curses.curs_set(1)
-
-    stdscr.addstr(10, 1, '  Q1 display emulator')
+    curses.curs_set(True)
+    stdscr.addstr(10, 1, '  Q1 display emulator', curses.color_pair(1))
     stdscr.refresh()
 
     while True:
@@ -24,9 +26,9 @@ def main(stdscr):
         x = int(data[0])
         y = int(data[1])
         data = data[2:]
-        for i in range(24):
-            line = data[i*40:i*40+40]
-            stdscr.addstr(i+1, 1, '{}'.format(line.decode('utf-8')))
+        for i in range(height):
+            line = data[i*width:i*width+width]
+            stdscr.addstr(i+1, 1, '{}'.format(line.decode('utf-8')), curses.color_pair(1))
         stdscr.move(y+1,x)
         stdscr.refresh()
 
