@@ -3,7 +3,8 @@ Q1-Lite Emulator
 ================
 
 Documentation for emulating the
-[Q1-Lite personal computer](https://datamuseum.dk/wiki/Q1_Microlite) from ROMs.
+`Q1-Lite personal computer <https://datamuseum.dk/wiki/Q1_Microlite>`_
+from ROMs.
 
 
 .. figure:: images/Q1lite.png
