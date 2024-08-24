@@ -2,7 +2,7 @@
 Annotated disassembly
 =====================
 
-From **disassembly.py -a** on 2024 08 19
+From **disassembly.py -a** on 2024 08 24
 
 .. code-block:: console
 
@@ -167,6 +167,8 @@ From **disassembly.py -a** on 2024 08 19
   00ee 06 01        ; ld b, 0x1            |
   00f0 16 13        ; ld d, 0x13           |
   00f2 18 db        ; jr 0xcf              |
+
+  ;binary to hex?
   00f4 47           ; ld b, a              |
   00f5 e6 0f        ; and 0xf              |
   00f7 c6 30        ; add a, 0x30          |
@@ -182,6 +184,8 @@ From **disassembly.py -a** on 2024 08 19
   0103 c6 30        ; add a, 0x30          |
   0105 77           ; ld (hl), a           |
   0106 c9           ; ret                  |
+
+  ;UNEXPLORED
   0107 80           ; add a, b             |
   0108 47           ; ld b, a              |
   0109 18 c4        ; jr 0xcf              |
@@ -196,8 +200,8 @@ From **disassembly.py -a** on 2024 08 19
   0118 7a           ; ld a, d              |
   0119 b7           ; or a                 |
   011a 7b           ; ld a, e              |
-  011b ea 22 01     ; jp pe, 0x122         |
-  011e 79           ; ld a, c              |
+  011b ea           ; db 0xea              |
+  011c 22 01 79     ; ld (0x7901), hl      |
   011f d6 2c        ; sub 0x2c             |
   0121 83           ; add a, e             |
   0122 2d           ; dec l                |
@@ -323,6 +327,7 @@ From **disassembly.py -a** on 2024 08 19
   01d9 3c           ; inc a                |
   01da 28 e6        ; jr z, 0x1c2          |
   01dc b7           ; or a                 |
+  01dd c9           ; ret                  |
 
   ;interrupt routine()
   01de f5           ; push af              |
@@ -872,7 +877,8 @@ From **disassembly.py -a** on 2024 08 19
   055c 47           ; ld b, a              |
   055d 04           ; inc b                |
   055e 0e 03        ; ld c, 0x3            |
-  0560 ed b3        ; otir                 | z80 otir instruction - B bytes from HL to port C
+  0560 ed           ; db 0xed              | z80 otir instruction - B bytes from HL to port C
+  0561 b3           ; or e                 |
   0562 c9           ; ret                  |
 
   ;handle tab clear (clears tab bit in hl?)
@@ -1603,11 +1609,13 @@ From **disassembly.py -a** on 2024 08 19
   09d1 d3 19        ; out (0x19), a        |
   09d3 d2 c8 0a     ; jp nc, 0xac8         |
   09d6 86           ; add a, (hl)          |
-  09d7 ed a3        ; outi                 |
+  09d7 ed           ; db 0xed              |
+  09d8 a3           ; and e                |
   09d9 20 fb        ; jr nz, 0x9d6         |
   09db 43           ; ld b, e              |
   09dc 86           ; add a, (hl)          |
-  09dd ed a3        ; outi                 |
+  09dd ed           ; db 0xed              |
+  09de a3           ; and e                |
   09df 20 fb        ; jr nz, 0x9dc         |
   09e1 15           ; dec d                |
   09e2 28 05        ; jr z, 0x9e9          |
@@ -1720,11 +1728,13 @@ From **disassembly.py -a** on 2024 08 19
   0ac2 32 9b 40     ; ld (0x409b), a       | set NRT   (disk record count) = a
   0ac5 c3 9f 09     ; jp 0x99f             |
   0ac8 86           ; add a, (hl)          |
-  0ac9 ed a3        ; outi                 |
+  0ac9 ed           ; db 0xed              |
+  0aca a3           ; and e                |
   0acb 43           ; ld b, e              |
   0acc 05           ; dec b                |
   0acd 86           ; add a, (hl)          |
-  0ace ed a3        ; outi                 |
+  0ace ed           ; db 0xed              |
+  0acf a3           ; and e                |
   0ad0 c3 dc 09     ; jp 0x9dc             |
   0ad3 dd 4e 0c     ; ld c, (ix + 0xc)     |
   0ad6 dd 46 0d     ; ld b, (ix + 0xd)     |
@@ -2749,11 +2759,13 @@ From **disassembly.py -a** on 2024 08 19
   11bf d3 09        ; out (0x9), a         | write Data Record identifier 0x9b
   11c1 d2 b6 12     ; jp nc, 0x12b6        |
   11c4 86           ; add a, (hl)          |
-  11c5 ed a3        ; outi                 | write (hl+i) to disk, i = 0 to b
+  11c5 ed           ; db 0xed              | write (hl+i) to disk, i = 0 to b
+  11c6 a3           ; and e                |
   11c7 20 fb        ; jr nz, 0x11c4        |
   11c9 43           ; ld b, e              |
   11ca 86           ; add a, (hl)          |
-  11cb ed a3        ; outi                 | write (hl+i) to disk, i = 0 to b
+  11cb ed           ; db 0xed              | write (hl+i) to disk, i = 0 to b
+  11cc a3           ; and e                |
   11cd 20 fb        ; jr nz, 0x11ca        |
   11cf 15           ; dec d                |
   11d0 28 05        ; jr z, 0x11d7         |
@@ -2870,11 +2882,13 @@ From **disassembly.py -a** on 2024 08 19
   12b0 32 9b 40     ; ld (0x409b), a       | set NRT   (disk record count) = a
   12b3 c3 8d 11     ; jp 0x118d            |
   12b6 86           ; add a, (hl)          |
-  12b7 ed a3        ; outi                 |
+  12b7 ed           ; db 0xed              |
+  12b8 a3           ; and e                |
   12b9 43           ; ld b, e              |
   12ba 05           ; dec b                |
   12bb 86           ; add a, (hl)          |
-  12bc ed a3        ; outi                 |
+  12bc ed           ; db 0xed              |
+  12bd a3           ; and e                |
   12be c3 ca 11     ; jp 0x11ca            |
 
   ;Set PART1 and PART2
@@ -3791,7 +3805,8 @@ From **disassembly.py -a** on 2024 08 19
   186c db 1f        ; in a, (0x1f)         |
   186e b9           ; cp c                 |
   186f 19           ; add hl, de           |
-  1870 ea 18 df     ; jp pe, 0xdf18        |
+  1870 ea           ; db 0xea              |
+  1871 18 df        ; jr 0x1852            |
   1873 18 b0        ; jr 0x1825            |
   1875 1f           ; rra                  |
   1876 f2 1f e1     ; jp p, 0xe11f         |
@@ -3827,18 +3842,18 @@ From **disassembly.py -a** on 2024 08 19
   189f 23           ; inc hl               |
   18a0 46           ; ld b, (hl)           |
   18a1 c5           ; push bc              |
-  18a2 c3 7c 18     ; jp 0x187c            |
+  18a2 c3 7c 18     ; jp 0x187c            | get next instr or address
   18a5 e1           ; pop hl               | INST 0A - add
   18a6 d1           ; pop de               |
   18a7 19           ; add hl, de           |
   18a8 e5           ; push hl              |
-  18a9 c3 7c 18     ; jp 0x187c            |
+  18a9 c3 7c 18     ; jp 0x187c            | get next instr or address
   18ac d1           ; pop de               | INST 03 - store binary number at stack address
   18ad e1           ; pop hl               |
   18ae 73           ; ld (hl), e           |
   18af 23           ; inc hl               |
   18b0 72           ; ld (hl), d           |
-  18b1 c3 7c 18     ; jp 0x187c            |
+  18b1 c3 7c 18     ; jp 0x187c            | get next instr or address
   18b4 e1           ; pop hl               | INST 0C - replace binary number with negation
   18b5 cd 15 00     ; call 0x15            | call NhL routine
   18b8 c3 a8 18     ; jp 0x18a8            |
@@ -3850,7 +3865,7 @@ From **disassembly.py -a** on 2024 08 19
   18c4 e1           ; pop hl               |
   18c5 cd 0f 00     ; call 0xf             | call DIV routine
   18c8 d5           ; push de              |
-  18c9 c3 7c 18     ; jp 0x187c            |
+  18c9 c3 7c 18     ; jp 0x187c            | get next instr or address
   18cc cd 2b 1d     ; call 0x1d2b          | INST 15 - PUT data to specified device driver
   18cf 41           ; ld b, c              |
   18d0 cd 2b 1d     ; call 0x1d2b          | increment IPC
@@ -3860,7 +3875,7 @@ From **disassembly.py -a** on 2024 08 19
   18d9 71           ; ld (hl), c           |
   18da 23           ; inc hl               |
   18db 70           ; ld (hl), b           |
-  18dc c3 7c 18     ; jp 0x187c            |
+  18dc c3 7c 18     ; jp 0x187c            | get next instr or address
   18df 2a fe 40     ; ld hl, (0x40fe)      | INST 33 - byte 2 and 3 is binary number, stacked
   18e2 46           ; ld b, (hl)           |
   18e3 23           ; inc hl               |
@@ -3875,7 +3890,7 @@ From **disassembly.py -a** on 2024 08 19
   18f1 c5           ; push bc              |
   18f2 c3 7f 18     ; jp 0x187f            |
   18f5 cd 03 00     ; call 0x3             | INST 1A - Convert from decimal to character
-  18f8 c3 7c 18     ; jp 0x187c            |
+  18f8 c3 7c 18     ; jp 0x187c            | get next instr or address
   18fb e1           ; pop hl               | INST 1E - Call to address on top of the stack
   18fc 7e           ; ld a, (hl)           |
   18fd 23           ; inc hl               |
@@ -3918,7 +3933,7 @@ From **disassembly.py -a** on 2024 08 19
   1935 c2 32 19     ; jp nz, 0x1932        |
   1938 c9           ; ret                  | INST 1F - return from subroutine
   1939 cd 21 00     ; call 0x21            | INST 24 - Get decimal number from input
-  193c c3 7c 18     ; jp 0x187c            |
+  193c c3 7c 18     ; jp 0x187c            | get next instr or address
   193f c1           ; pop bc               | INST 2A - Output character N times
   1940 d1           ; pop de               |
   1941 7b           ; ld a, e              |
@@ -3927,11 +3942,11 @@ From **disassembly.py -a** on 2024 08 19
   1946 48           ; ld c, b              |
   1947 c3 6d 19     ; jp 0x196d            |
   194a cd 24 00     ; call 0x24            | INST 23 - Get new line of keyboard input
-  194d c3 7c 18     ; jp 0x187c            |
+  194d c3 7c 18     ; jp 0x187c            | get next instr or address
   1950 c1           ; pop bc               | INST 25 - Get character string from input
   1951 e1           ; pop hl               |
   1952 cd 1e 00     ; call 0x1e            |
-  1955 c3 7c 18     ; jp 0x187c            |
+  1955 c3 7c 18     ; jp 0x187c            | get next instr or address
   1958 cd 03 00     ; call 0x3             | INST 27 - Put decimal number
   195b 3e 20        ; ld a, 0x20           |
   195d 0e 10        ; ld c, 0x10           |
@@ -3945,7 +3960,7 @@ From **disassembly.py -a** on 2024 08 19
   196b c1           ; pop bc               | INST 26 - Put character string
   196c e1           ; pop hl               |
   196d cd fb 40     ; call 0x40fb          |
-  1970 c3 7c 18     ; jp 0x187c            |
+  1970 c3 7c 18     ; jp 0x187c            | get next instr or address
   1973 d1           ; pop de               | INST 28 - Put Edit character string
   1974 c1           ; pop bc               |
   1975 e1           ; pop hl               |
@@ -3993,7 +4008,7 @@ From **disassembly.py -a** on 2024 08 19
   19b1 b3           ; or e                 |
   19b2 c2 ac 19     ; jp nz, 0x19ac        |
   19b5 e1           ; pop hl               |
-  19b6 c3 7c 18     ; jp 0x187c            |
+  19b6 c3 7c 18     ; jp 0x187c            | get next instr or address
   19b9 c1           ; pop bc               | INST 31 - store string (no padding)
   19ba 79           ; ld a, c              |
   19bb e1           ; pop hl               |
@@ -4016,7 +4031,7 @@ From **disassembly.py -a** on 2024 08 19
   19d4 06 00        ; ld b, 0x0            |
   19d6 d5           ; push de              |
   19d7 c5           ; push bc              |
-  19d8 c3 7c 18     ; jp 0x187c            |
+  19d8 c3 7c 18     ; jp 0x187c            | get next instr or address
   19db c1           ; pop bc               | INST 29 - Put Edit decimal number
   19dc 79           ; ld a, c              |
   19dd c1           ; pop bc               |
@@ -4183,7 +4198,7 @@ From **disassembly.py -a** on 2024 08 19
   1ae9 e1           ; pop hl               |
   1aea cd 2d 00     ; call 0x2d            | call CARB (ch to binary)
   1aed d5           ; push de              |
-  1aee c3 7c 18     ; jp 0x187c            |
+  1aee c3 7c 18     ; jp 0x187c            | get next instr or address
   1af1 e1           ; pop hl               | INST 18 - Convert from binary to decimal
   1af2 22 64 42     ; ld (0x4264), hl      |
   1af5 e1           ; pop hl               |
@@ -4206,13 +4221,13 @@ From **disassembly.py -a** on 2024 08 19
   1b18 e5           ; push hl              |
   1b19 2a 64 42     ; ld hl, (0x4264)      |
   1b1c e5           ; push hl              |
-  1b1d c3 7c 18     ; jp 0x187c            |
+  1b1d c3 7c 18     ; jp 0x187c            | get next instr or address
   1b20 e1           ; pop hl               | INST 19 - Convert from binary to character
   1b21 11 32 42     ; ld de, 0x4232        |
   1b24 cd 12 00     ; call 0x12            | call TODEC
   1b27 d5           ; push de              |
   1b28 c5           ; push bc              |
-  1b29 c3 7c 18     ; jp 0x187c            |
+  1b29 c3 7c 18     ; jp 0x187c            | get next instr or address
   1b2c e1           ; pop hl               | INST 12 - And binary
   1b2d d1           ; pop de               |
   1b2e 7d           ; ld a, l              |
@@ -4222,7 +4237,7 @@ From **disassembly.py -a** on 2024 08 19
   1b32 a2           ; and d                |
   1b33 67           ; ld h, a              |
   1b34 e5           ; push hl              |
-  1b35 c3 7c 18     ; jp 0x187c            |
+  1b35 c3 7c 18     ; jp 0x187c            | get next instr or address
   1b38 e1           ; pop hl               | INST 13 - Or binary
   1b39 d1           ; pop de               |
   1b3a 7d           ; ld a, l              |
@@ -4232,12 +4247,12 @@ From **disassembly.py -a** on 2024 08 19
   1b3e b2           ; or d                 |
   1b3f 67           ; ld h, a              |
   1b40 e5           ; push hl              |
-  1b41 c3 7c 18     ; jp 0x187c            |
+  1b41 c3 7c 18     ; jp 0x187c            | get next instr or address
   1b44 e1           ; pop hl               | INST 14 - Ones complement binary
   1b45 cd 15 00     ; call 0x15            | call NHL (negate binary in hl)
   1b48 2b           ; dec hl               |
   1b49 e5           ; push hl              |
-  1b4a c3 7c 18     ; jp 0x187c            |
+  1b4a c3 7c 18     ; jp 0x187c            | get next instr or address
   1b4d d1           ; pop de               | INST 2E - Read key
   1b4e e1           ; pop hl               |
   1b4f 22 14 42     ; ld (0x4214), hl      |
@@ -4308,7 +4323,7 @@ From **disassembly.py -a** on 2024 08 19
   1bd1 cd 12 08     ; call 0x812           |
   1bd4 c3 81 1b     ; jp 0x1b81            |
   1bd7 cd 06 00     ; call 0x6             | INST 17 - Convert from character to decimal
-  1bda c3 7c 18     ; jp 0x187c            |
+  1bda c3 7c 18     ; jp 0x187c            | get next instr or address
   1bdd cd fb 1d     ; call 0x1dfb          | INST 08 - compare decimal
   1be0 e5           ; push hl              |
   1be1 1a           ; ld a, (de)           |
@@ -4456,7 +4471,7 @@ From **disassembly.py -a** on 2024 08 19
   1cc8 f1           ; pop af               |
   1cc9 f1           ; pop af               |
   1cca f1           ; pop af               |
-  1ccb c3 7c 18     ; jp 0x187c            |
+  1ccb c3 7c 18     ; jp 0x187c            | get next instr or address
 
   ;aaaa()
   1cce 11 09 00     ; ld de, 0x9           |
@@ -4503,7 +4518,7 @@ From **disassembly.py -a** on 2024 08 19
   1d0d 2b           ; dec hl               |
   1d0e 0d           ; dec c                |
   1d0f c2 0a 1d     ; jp nz, 0x1d0a        |
-  1d12 c3 7c 18     ; jp 0x187c            |
+  1d12 c3 7c 18     ; jp 0x187c            | get next instr or address
   1d15 cd 2b 1d     ; call 0x1d2b          | INST 04 - store float
   1d18 21 09 00     ; ld hl, 0x9           |
   1d1b 39           ; add hl, sp           |
@@ -4533,7 +4548,7 @@ From **disassembly.py -a** on 2024 08 19
   1d39 c1           ; pop bc               |
   1d3a 78           ; ld a, b              |
   1d3b b1           ; or c                 |
-  1d3c c2 7c 18     ; jp nz, 0x187c        | run microcode program
+  1d3c c2 7c 18     ; jp nz, 0x187c        | get next instr or address
   1d3f c3 7f 18     ; jp 0x187f            |
   1d42 21 0b 00     ; ld hl, 0xb           | INST 21 - Do loop control for decimal indexes
   1d45 39           ; add hl, sp           |
@@ -4618,10 +4633,10 @@ From **disassembly.py -a** on 2024 08 19
   1dbb c3 27 1d     ; jp 0x1d27            |
   1dbe cd fb 1d     ; call 0x1dfb          | INST 0D - negate decimal?
   1dc1 b7           ; or a                 |
-  1dc2 ca 7c 18     ; jp z, 0x187c         |
+  1dc2 ca 7c 18     ; jp z, 0x187c         | get next instr or address
   1dc5 ee 80        ; xor 0x80             |
   1dc7 12           ; ld (de), a           |
-  1dc8 c3 7c 18     ; jp 0x187c            |
+  1dc8 c3 7c 18     ; jp 0x187c            | get next instr or address
   1dcb d1           ; pop de               | INST 02 - stack dec num from address on stack
   1dcc 01 00 00     ; ld bc, 0x0           |
   1dcf c5           ; push bc              |
@@ -4654,7 +4669,7 @@ From **disassembly.py -a** on 2024 08 19
   1df3 b6           ; or (hl)              |
   1df4 77           ; ld (hl), a           |
   1df5 cd ce 1c     ; call 0x1cce          | call aaaa()
-  1df8 c3 7c 18     ; jp 0x187c            | run microcode program
+  1df8 c3 7c 18     ; jp 0x187c            | get next instr or address
   1dfb 21 09 00     ; ld hl, 0x9           |
   1dfe 11 08 00     ; ld de, 0x8           |
   1e01 39           ; add hl, sp           |
@@ -4962,7 +4977,7 @@ From **disassembly.py -a** on 2024 08 19
   1fc9 f1           ; pop af               |
   1fca f1           ; pop af               |
   1fcb c5           ; push bc              |
-  1fcc c3 7c 18     ; jp 0x187c            | run microcode program
+  1fcc c3 7c 18     ; jp 0x187c            | get next instr or address
   1fcf e1           ; pop hl               |
   1fd0 c1           ; pop bc               |
   1fd1 c3 b4 1f     ; jp 0x1fb4            |
@@ -4970,14 +4985,14 @@ From **disassembly.py -a** on 2024 08 19
   1fd5 53           ; ld d, e              |
   1fd6 1b           ; dec de               |
   1fd7 d5           ; push de              |
-  1fd8 c3 7c 18     ; jp 0x187c            | run microcode program
+  1fd8 c3 7c 18     ; jp 0x187c            | get next instr or address
   1fdb c1           ; pop bc               | INST 30 - string length
   1fdc e1           ; pop hl               |
   1fdd cd e7 1f     ; call 0x1fe7          |
   1fe0 48           ; ld c, b              |
   1fe1 06 00        ; ld b, 0x0            |
   1fe3 c5           ; push bc              |
-  1fe4 c3 7c 18     ; jp 0x187c            | run microcode program
+  1fe4 c3 7c 18     ; jp 0x187c            | get next instr or address
   1fe7 0c           ; inc c                |
   1fe8 7e           ; ld a, (hl)           |
   1fe9 23           ; inc hl               |
@@ -4995,5 +5010,5 @@ From **disassembly.py -a** on 2024 08 19
   1ff7 47           ; ld b, a              |
   1ff8 cd 39 00     ; call 0x39            | jump via 0x4f to 0x734
   1ffb e5           ; push hl              |
-  1ffc c3 7c 18     ; jp 0x187c            | run microcode program
+  1ffc c3 7c 18     ; jp 0x187c            | get next instr or address
   1fff ff           ; rst 0x38             |
