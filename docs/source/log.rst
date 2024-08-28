@@ -471,3 +471,10 @@ Some cleanup, added track 4 from the 'felsökningsdiskett' disk. Added the PRINT
 program from the same disk for disassembly and debug. It is the first use of the
 real time clock (RTC) that I have seen. Yet another item for the (nonexisting)
 TODO list.
+
+
+2024 08 29
+----------
+
+Added RTC in() and out() abstractions, corrected program name from PRINT to
+RTCTEST. Added a beep for keyboard out() (bits 0 and 1).
