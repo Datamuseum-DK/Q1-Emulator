@@ -161,6 +161,13 @@ on page 10 and 11.
 This is useful when you want to simulate keyboard input. The documentation is
 incomplete as it doesn't mention the important 'GO' key with code 0x0e.
 
+.. figure:: images/q1keyboard.png
+  :width: 800
+  :align: center
+
+  Keyboard (from 'first system brochure.pdf')
+
+
 .. list-table:: Key codes
    :header-rows: 1
 

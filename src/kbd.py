@@ -10,12 +10,76 @@ from select import select
 #     optm = 181
 #     backspace = 127
 #
-# q1key = {
-#     "GO"   : kMBP.optg,
-#     "CORR" : kMBP.backspace,
-#     "CLEAR ENTRY" : kMBP.optc,
-#     "INSERT MODE" : kMBP.optm
-# }
+
+class KeyboardCodes:
+
+    def __init__(self, input="macos"):
+        if input == "macos":
+            self.input = self.macos
+        else:
+            assert False, 'no known keyboard input provided'
+
+
+    # Macos mappings for Q1 Emulator
+    macos = {
+        #"TAB CLR"     : 0x02,
+        "TAB SET"     : 339,  # opt-q
+        "CORR"        : 127,  # backspace
+        "TAB"         :   9,  # TAB
+        "RETURN"      :  10,  # RETURN
+        "GO"          : 169,  # opt-g
+        "STOP"        : 223,  # opt-s
+        #"REV TAB"     : 0x10,
+        "HEX"         : 8721, # opt-w
+        "CLEAR ENTRY" :  231, # opt-c
+        "CHAR ADV"    :  172, # opt-l
+        "DEL CHAR"    : 8706, # opt-d
+        "INSERT MODE" : 181   # opt-m
+    }
+
+    windows = {
+        #"TAB CLR"     : 0x02,
+        # "TAB SET"     : 339,  # opt-q
+        # "CORR"        : 127,  # backspace
+        # "TAB"         :   9,  # TAB
+        # "RETURN"      :  10,  # RETURN
+        # "GO"          : 169,  # opt-g
+        # "STOP"        : 223,  # opt-s
+        #"REV TAB"     : 0x10,
+        # "HEX"         : 8721, # opt-w
+        # "CLEAR ENTRY" :  231, # opt-c
+        # "CHAR ADV"    :  172, # opt-l
+        # "DEL CHAR"    : 8706, # opt-d
+        # "INSERT MODE" : 181   # opt-m
+    }
+
+    # Key codes used by Q1
+    q1key = {
+        "TAB CLR"     : 0x02,
+        "TAB SET"     : 0x03,
+        "CORR"        : 0x04,
+        "TAB"         : 0x09,
+        "RETURN"      : 0x0d,
+        "GO"          : 0x0e,
+        "STOP"        : 0x0f,
+        "REV TAB"     : 0x10,
+        "HEX"         : 0x1a,
+        "CLEAR ENTRY" : 0x1b,
+        "CHAR ADV"    : 0x1c,
+        "DEL CHAR"    : 0x1d,
+        "INSERT MODE" : 0x1e
+    }
+
+    # get input key value for Q1 keyboard
+    def ikey(self, s):
+        assert s in self.input
+        return self.input[s]
+
+    # get output key value for Q1
+    def okey(self, s):
+        assert s in self.q1key
+        return self.q1key[s]
+
 
 
 

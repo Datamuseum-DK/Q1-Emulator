@@ -20,7 +20,6 @@ class IO:
         self.outcb = {}
         self.keyincount = 0
         self.keyin = 0
-        self.displaystr = ""
         self.diskdata = 0x00
         self.diskstatus = 0x00
         self.go = 0
@@ -96,25 +95,12 @@ class IO:
     def handle_display_out(self, val) -> str:
         self.display.data(chr(val))
         self.display.update()
-        # if isprintable(val):
-        #     #self.print(f"IO out - display {val} '{chr(val)}'")
-        #     self.displaystr += chr(val)
-        #     if len(self.displaystr) > 1000:
-        #         print(self.displaystr)
-        #         self.displaystr = ""
-        # else:
-        #     pass #self.print(f"IO out - display (non printable){val}")
 
 
     def handle_display_out_ctrl(self, val) -> str:
         self.display.control(val)
         if val == 0x05:
             desc = 'unblank, reset to (1,1)'
-        #     #self.displaystr += "\n"
-        #
-        #     if len(self.displaystr) > 1:
-        #         print(self.displaystr)
-        #     self.displaystr = ""
         elif val == 0x08:
             desc = 'advance right (or new line)'
         else:

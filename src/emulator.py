@@ -31,6 +31,7 @@ def emulator(args):
     io = z80io.IO(cpu.m, ddim.ddfs) # todo select from multiple
     ros = r.ROS(cpu.mem)
     key = kbd.Key()
+    kc = kbd.KeyboardCodes()
     #io.verbose = True
     cpu.reset()
     cpu.m.set_input_callback(io.handle_io_in)
@@ -51,8 +52,6 @@ def emulator(args):
             print(f'exiting ... {icount}')
             for l in cpu.bt:
                 print(l)
-            print(f'printed characters ({len(io.displaystr)}):')
-            print(f'{io.displaystr}')
             sys.exit()
 
         if pc in funcs and args.decode:
@@ -78,24 +77,6 @@ def emulator(args):
         # main cpu emulation step
         cpu.step() # does the actual emulation of the next instruction
 
-        if 1:
-            # if pc == 0xd41:
-            #     print('DISK READ')
-            if pc == 0x85e:
-                print('DISK KEY')
-            if pc == 0x818:
-                print('DISK (error) REPORT')
-            if pc == 0xd21:
-                print('DISK OPEN')
-            if pc == 0xd1e:
-                print('LOADER')
-            if pc == 0x1393:
-                print(f'ID Record w. good cksum: Track {cpu.m.b}, Record {cpu.m.c}')
-            # if pc == 0x1497:
-            #     print(f'Expected Record {cpu.m.e}, got Record {cpu.m.a}')
-            # if pc == 0x145a:
-            #     print('Is Data Record?')
-
 
         if pc in (args.breakpoint, stoppc):
             print(f'\n<<<< BREAKPOINT at 0x{pc:04x} >>>>\n')
@@ -109,12 +90,6 @@ def emulator(args):
             cpu.info()
 
         if pc ==0x4cb and args.program == 'jdc':
-            print(io.displaystr)
-            io.displaystr = ""
-            # cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)
-            # ros.index()
-            # ros.file()
-            # ros.disk()
             print("<STOP>")
 
         if (icount % 1000) == 0: # int_disabled check?
@@ -129,34 +104,33 @@ def emulator(args):
                     cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)
                 elif ch == 8224: # opt-t
                     args.decode = not args.decode
-                elif ch == 8721:       # opt-w -> HEX
-                    int38(cpu, io, 0x1a)
-                elif ch == 960:        # opt-p -> regdump
-                    print(cpu.getregs())
-                elif ch == 0x09:       # TAB
-                    int38(cpu, io, 0x09)
-                elif ch == 0x0a:       # LF -> CR
-                    int38(cpu, io, 0x0d)
-                elif ch == 169:        # opt-g GO
-                    io.go = 1
-                elif ch == 223:        # opt-s STOP
-                    io.stop = 1
-                elif ch == 127:
-                    int38(cpu, io, 0x04) # BS -> CORR
-                elif ch == 231:
-                    int38(cpu, io, 0x1b) # opt-c -> CLEAR ENTRY
-                elif ch == 181:        # opt-m -> INSERT MODE
-                    int38(cpu, io, 0x1e)
-                elif ch == 172:        # opt-l -> CHAR ADV
-                    int38(cpu, io, 0x1c)
-                elif ch == 8706:       # opt-l -> DEL CHAR
-                    int38(cpu, io, 0x1d)
-                elif ch == 339:       # opt-q -> SET TAB
-                    int38(cpu, io, 0x03)
                 elif ch == 170: # opt-a FDs
                     ros.index()
                     ros.file()
                     ros.disk()
+                # Q1 Keyboard input below
+                elif ch == kc.ikey("HEX"):
+                    int38(cpu, io, kc.okey("HEX"))
+                elif ch == kc.ikey("TAB"):
+                    int38(cpu, io, kc.okey("TAB"))
+                elif ch == kc.ikey("RETURN"):
+                    int38(cpu, io, kc.okey("RETURN"))
+                elif ch == kc.ikey("GO"):
+                    io.go = 1
+                elif ch == kc.ikey("STOP"):
+                    io.stop = 1
+                elif ch == kc.ikey("CORR"):
+                    int38(cpu, io, kc.okey("CORR"))
+                elif ch == kc.ikey("CLEAR ENTRY"):
+                    int38(cpu, io, kc.okey("CLEAR ENTRY"))
+                elif ch == kc.ikey("INSERT MODE"):
+                    int38(cpu, io, kc.okey("INSERT MODE"))
+                elif ch == kc.ikey("CHAR ADV"):
+                    int38(cpu, io, kc.okey("CHAR ADV"))
+                elif ch == kc.ikey("DEL CHAR"):
+                    int38(cpu, io, kc.okey("DEL CHAR"))
+                elif ch == kc.ikey("TAB SET"):
+                    int38(cpu, io, kc.okey("TAB SET"))
                 else:
                     int38(cpu, io, ch)
 
