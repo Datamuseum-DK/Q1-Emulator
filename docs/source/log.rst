@@ -462,3 +462,12 @@ display buffer to a **curses** based application.
   :align: center
 
   Left window: debug output and keyboard input. Right window display emulator.
+
+
+2024 08 28
+----------
+
+Some cleanup, added track 4 from the 'felsökningsdiskett' disk. Added the PRINT
+program from the same disk for disassembly and debug. It is the first use of the
+real time clock (RTC) that I have seen. Yet another item for the (nonexisting)
+TODO list.
