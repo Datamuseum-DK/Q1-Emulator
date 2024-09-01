@@ -7,14 +7,14 @@ jdc = {
     "descr": "Combined Q1 image from IC25-IC32",
     "start": 0x0000,
     "data": [
-        ["file", "roms/JDC/IC25.bin", 0x0000],
-        ["file", "roms/JDC/IC26.bin", 0x0400],
-        ["file", "roms/JDC/IC27.bin", 0x0800],
-        ["file", "roms/JDC/IC28.bin", 0x0C00],
-        ["file", "roms/JDC/IC29.bin", 0x1000],
-        ["file", "roms/JDC/IC30.bin", 0x1400],
-        ["file", "roms/JDC/IC31.bin", 0x1800],
-        ["file", "roms/JDC/IC32.bin", 0x1C00]
+        ["file", "roms/JDC/IC25.BIN", 0x0000],
+        ["file", "roms/JDC/IC26.BIN", 0x0400],
+        ["file", "roms/JDC/IC27.BIN", 0x0800],
+        ["file", "roms/JDC/IC28.BIN", 0x0C00],
+        ["file", "roms/JDC/IC29.BIN", 0x1000],
+        ["file", "roms/JDC/IC30.BIN", 0x1400],
+        ["file", "roms/JDC/IC31.BIN", 0x1800],
+        ["file", "roms/JDC/IC32.BIN", 0x1C00]
         # ["snippet", [0xff], 0x1000] # force different disk access path
     ],
     "funcs" : {
@@ -441,6 +441,7 @@ jdc = {
         [0x056e, 0x0587, 'unknown HEXX function?'],
         [0x0588, 0x0598, 'update cursor position and current size of line'],
         [0x0599, 0x05a7, 'unknown (on key 0x9a?)'],
+        [0x05a8, 0x05b4, 'unknown (on key 0x9e?)'],
         [0x05b5, 0x05cd, 'get tab position bit??'],
         [0x05ce, 0x05d3, 'something with HEX last key'],
         [0x05d4, 0x05d9, 'Toggle INSERT mode (on key 0x1e)'],

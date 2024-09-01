@@ -9,6 +9,7 @@ import ros as r
 import z80io
 import programs as prg
 import disks.debugdisk.image as ddim
+import disks.datamuseum.image as dmim
 
 '''
     Q1 Emulator
@@ -28,7 +29,9 @@ def emulator(args):
     funcs = prgobj["funcs"]
 
     cpu = c.Cpu(prgobj)
-    io = z80io.IO(cpu.m, ddim.ddfs) # todo select from multiple
+    # todo select from multiple disk images
+    #io = z80io.IO(cpu.m, ddim.ddfs)
+    io = z80io.IO(cpu.m, dmim.dmfs)
     ros = r.ROS(cpu.mem)
     key = kbd.Key()
     kc = kbd.KeyboardCodes()
@@ -131,6 +134,8 @@ def emulator(args):
                     int38(cpu, io, kc.okey("DEL CHAR"))
                 elif ch == kc.ikey("TAB SET"):
                     int38(cpu, io, kc.okey("TAB SET"))
+                elif ch == kc.ikey("RESET"):
+                    cpu.m.pc = 0
                 else:
                     int38(cpu, io, ch)
 

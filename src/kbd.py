@@ -23,18 +23,21 @@ class KeyboardCodes:
     # Macos mappings for Q1 Emulator
     macos = {
         #"TAB CLR"     : 0x02,
-        "TAB SET"     : 339,  # opt-q
-        "CORR"        : 127,  # backspace
-        "TAB"         :   9,  # TAB
-        "RETURN"      :  10,  # RETURN
-        "GO"          : 169,  # opt-g
-        "STOP"        : 223,  # opt-s
+        "TAB SET"     :  339,  # opt-q
+        "CORR"        :  127,  # backspace
+        "TAB"         :    9,  # TAB
+        "RETURN"      :   10,  # RETURN
+        "GO"          :  169,  # opt-g
+        "STOP"        :  223,  # opt-s
         #"REV TAB"     : 0x10,
-        "HEX"         : 8721, # opt-w
-        "CLEAR ENTRY" :  231, # opt-c
-        "CHAR ADV"    :  172, # opt-l
-        "DEL CHAR"    : 8706, # opt-d
-        "INSERT MODE" : 181   # opt-m
+        "HEX"         : 8721,  # opt-w
+        "CLEAR ENTRY" :  231,  # opt-c
+        "CHAR ADV"    :  172,  # opt-l
+        "DEL CHAR"    : 8706,  # opt-d
+        "INSERT MODE" :  181,  # opt-m
+        # Reset is not a keyboard input, but the red
+        # button on the right side of the cabinet
+        "RESET"       :  174   # opt-r
     }
 
     windows = {

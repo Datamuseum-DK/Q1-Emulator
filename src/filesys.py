@@ -114,7 +114,7 @@ class FileSys:
     def loadtracks(self, track_list): # assume contiguous, starting with t0
         for track, trackdata in enumerate(track_list):
             offset = 0
-            for lst in trackdata.data:
+            for lst in trackdata:
                 self.marks[track].add(offset)
                 offset = self.rawrecord(track, offset, lst)
 

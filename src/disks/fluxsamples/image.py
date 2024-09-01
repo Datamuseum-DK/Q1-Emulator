@@ -7,7 +7,7 @@ import filesys
 
 
 fluxfs = filesys.FileSys()
-fluxfs.loadtracks([t0, t1, t2]) #
+fluxfs.loadtracks([t0.data, t1.data, t2.data]) #
 
 
 if __name__ == '__main__':

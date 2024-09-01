@@ -471,3 +471,24 @@ Some cleanup, added track 4 from the 'felsökningsdiskett' disk. Added the PRINT
 program from the same disk for disassembly and debug. It is the first use of the
 real time clock (RTC) that I have seen. Yet another item for the (nonexisting)
 TODO list.
+
+2024 08 30
+----------
+
+Added a readbin.py function that converts the datamuseum .BIN file into python
+code that can be loaded by the emulator.
+
+
+2024 08 31
+----------
+
+Managed to create a filesytem with (parts of) the data from Q1_FLOPPY.BIN. The
+main objective was to run the DINDEX program which was corrupted on the
+debugdisk (felsökningsdiskett) from Mattis.
+
+
+.. figure:: images/dindex.png
+  :width: 800
+  :align: center
+
+  DINDEX program running.
