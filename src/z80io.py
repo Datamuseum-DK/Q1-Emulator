@@ -1,5 +1,6 @@
 """Module to provide IO hooks for the Q1 Lite"""
 
+import sys
 import disk
 import display
 
@@ -20,11 +21,13 @@ class IO:
         self.outcb = {}
         self.keyincount = 0
         self.keyin = 0
-        self.diskdata = 0x00
-        self.diskstatus = 0x00
         self.go = 0
         self.stop = 0
+        self.timeout = False
         self.verbose = False
+        self.register_in_cb( 0x00, self.handle_rtc_in)
+        self.register_out_cb(0x00, self.handle_rtc_out)
+
         self.register_in_cb( 0x01, self.handle_key_in)
         self.register_out_cb(0x01, self.handle_key_out)
 
@@ -68,10 +71,11 @@ class IO:
         if inaddr in self.incb:
             return self.incb[inaddr]()
 
-        #print(f'IO - unregistered input address 0x{inaddr:02x} at pc {self.m.pc:04x}, exiting')
-        #print()
+        print(f'IO - unregistered input address 0x{inaddr:02x} at pc {self.m.pc:04x}, exiting')
+        print()
+        sys.exit()
         return 0
-        #sys.exit()
+
 
     def handle_io_out(self, outaddr, outval):
         outaddr = outaddr & 0xff
@@ -80,10 +84,21 @@ class IO:
             self.outcb[outaddr](outval)
         else:
             self.print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
-            #sys.exit()
+            sys.exit()
 
 
     ### Specific functions
+
+    ### Real Time Clock (RTC)
+    def handle_rtc_in(self) -> int:
+        if self.timeout:
+            self.timeout = False
+            return 1 # Bit 0 is timeout
+        return 0
+
+    def handle_rtc_out(self, val):
+        print(f"setting timeout value {val} not supported")
+
 
     ### Display
 
@@ -92,7 +107,7 @@ class IO:
         return 32 + 16
 
 
-    def handle_display_out(self, val) -> str:
+    def handle_display_out(self, val):
         self.display.data(chr(val))
         self.display.update()
 
@@ -123,11 +138,24 @@ class IO:
 
 
     def handle_key_out(self, val):
-        if val == 0x04:
-            desc = 'keyboard mode 2'
-        else:
-            desc = 'unknown'
-        self.print(f'IO out - key - {desc}')
+        desc = ''
+        if val & 0x01: # click
+            print('\a')
+            desc += 'click '
+        if val & 0x02: # beep
+            print('\a')
+            desc += 'beep '
+        mode = (val >> 2) & 0x3 + 1
+        desc += f'mode {mode}'
+        if val & 0x10:
+            desc += 'K1 '
+        if val & 0x20:
+            desc += 'K2 '
+        if val & 0x40:
+            desc += 'K3 '
+        if val & 0x80:
+            desc += 'INS '
+        print(f'IO out - key [{desc}]')
 
 
     ### Printer

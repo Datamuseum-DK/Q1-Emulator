@@ -10,6 +10,7 @@ import z80io
 import programs as prg
 import disks.debugdisk.image as ddim
 import disks.datamuseum.image as dmim
+from timeit import default_timer as timer
 
 '''
     Q1 Emulator
@@ -48,7 +49,12 @@ def emulator(args):
     if args.hexdump:
         cpu.mem.hexdump(0x2000, 0xFFFF - 0x2000) # dump RAM part of memory
 
+    tstart = timer()
     while True:
+        tend = timer()
+        if (tend - tstart) > 1.0:
+            tstart = timer()
+            io.timeout = True
         pc = cpu.m.pc
         icount += 1
         if icount >= args.stopafter or pc > 65530:

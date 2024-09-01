@@ -695,8 +695,8 @@ SCR = {
         ]
 }
 
-PRINT = {
-    "descr": "PRINT program from felsökningsdiskett",
+RTCTEST = {
+    "descr": "RTCTEST program from felsökningsdiskett (track 4)",
     "start": 0x4300,
     "stop" : 0x4327,
     "data": [
@@ -714,6 +714,6 @@ PRINT = {
     0x4316: 'keyboard mode 3, audible click',
     },
     "known_ranges" : [
-        [0x4300, 0x4327, 'PRINT()'],
+        [0x4300, 0x4327, 'RTCTEST()'],
         ]
 }
