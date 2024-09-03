@@ -21,7 +21,7 @@ Some keys have built-in LEDs to indicate state: Shift Lock, 3RD shift(?),
 4TH Shift, INSRT MODE, K1, K2 and K3.
 
 
-.. figure:: images/q1keyboard_dm.png
+.. figure:: images/q1keyboard_dm.jpg
   :width: 800
   :align: center
 
