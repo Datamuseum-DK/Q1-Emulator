@@ -7,7 +7,7 @@ import filesys
 
 
 dmfs = filesys.FileSys()
-dmfs.loadtracks2(disk.data)
+dmfs.loadtracks(disk.data)
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ import filesys
 
 
 ddfs = filesys.FileSys()
-ddfs.loadtracks2([t0.data, t1.data, t2.data, t3.data, t4.data])
+ddfs.loadtracks([t0.data, t1.data, t2.data, t3.data, t4.data])
 
 
 if __name__ == '__main__':

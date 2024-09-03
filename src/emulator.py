@@ -32,7 +32,9 @@ def emulator(args):
     cpu = c.Cpu(prgobj)
     # todo select from multiple disk images
     #io = z80io.IO(cpu.m, ddim.ddfs)
-    io = z80io.IO(cpu.m, dmim.dmfs)
+    floppydisks = [dmim.dmfs, ddim.ddfs]
+    harddisks = [dmim.dmfs, ddim.ddfs]
+    io = z80io.IO(cpu.m, floppydisks, harddisks)
     ros = r.ROS(cpu.mem)
     key = kbd.Key()
     kc = kbd.KeyboardCodes()
@@ -50,6 +52,7 @@ def emulator(args):
         cpu.mem.hexdump(0x2000, 0xFFFF - 0x2000) # dump RAM part of memory
 
     tstart = timer()
+    testkey = 1
     while True:
         tend = timer()
         if (tend - tstart) > 1.0:
@@ -113,10 +116,7 @@ def emulator(args):
                     cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)
                 elif ch == 8224: # opt-t
                     args.decode = not args.decode
-                elif ch == 170: # opt-a FDs
-                    ros.index()
-                    ros.file()
-                    ros.disk()
+
                 # Q1 Keyboard input below
                 elif ch == kc.ikey("HEX"):
                     int38(cpu, io, kc.okey("HEX"))

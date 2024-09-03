@@ -1,28 +1,115 @@
+import sys
 
-# for now assume disk/drive 1 only, side 0 only
-
+# System can have multple Disks (Floppy, Harddisks)
+# Disks can have multiple Drives (0, 1, ...)
 
 class Disk:
-    def __init__(self, diskno, fs): #
-        self.diskno = diskno
+    def __init__(self, type, drives):
+        print(f'disk {type} has {len(drives)} drives')
+        self.type = type
+        self.selected_drive = -1
+        self.numdrives = len(drives)
+        self.drives = []
+        for i, fs in enumerate(drives):
+            self.drives.append(Drive(i, fs))
+
+
+    def isdriveavailable(self):
+        return 0 < self.selected_drive <= self.numdrives
+
+
+    def getdrive(self):
+        return self.selected_drive
+
+
+    def deselect_drive(self):
+        self.selected_drive = -1
+        self.drive = ""
+
+
+    def select_drive(self, i):
+        drive = i & 0x7f
+        if drive == 0:
+            self.deselect_drive()
+            return
+
+        self.selected_drive = drive # allow selection of unavailable drives
+        if drive <= len(self.drives):
+            print(f'select_drive: {self.type}/{drive} - available')
+            self.drive = self.drives[drive - 1]
+        else:
+            print(f'select_drive: {self.type}/{drive} - unavailable')
+            self.drive = 'unavailable'
+        assert self.selected_drive in [1, 2, 3, 4, 5, 6, 7]
+
+
+    def readbyte(self):
+        return self.drive.readbyte()
+
+
+    def write(self, byte):
+        print('write not supported')
+        sys.exit()
+
+
+    def step(self, stepdir):
+        self.drive.step(stepdir)
+
+
+    def gettrackno(self):
+        return self.drive.gettrackno()
+
+
+    def istrack0(self):
+        return self.drive.istrack0()
+
+
+    def isindex(self):
+        return self.drive.isindex()
+
+
+    def isbusy(self):
+        return self.drive.isbusy()
+
+
+    def status(self) -> int:
+        if self.type != 'floppy':
+            print(f'disk.status: {self.type} drive not available')
+            return 0
+        if not self.isdriveavailable():
+            print(f'status: drive {self.selected_drive} not valid')
+            return 0
+        return self.drive.status()
+
+
+class Drive:
+    def __init__(self, driveno, fs): #
+        self.driveno = driveno
         self.tracks = fs.tracks
         self.bytes_per_track = fs.bpt
         self.data = fs.data
         self.marks = fs.marks
         self.current_track = 0
         self.current_byte = 0
-        self.bytes_read = 0
+
+
+    def istrack0(self):
+        return self.current_track == 0
+
+
+    def isindex(self):
+        return self.current_byte == 0
 
 
     def step(self, direction):
         self.current_byte = 0 # assumption
         if direction: # UP
-            msg = f'disk {self.diskno}, step up 0x{direction:02x}'
+            msg = f'disk {self.driveno}, step up 0x{direction:02x}'
             msg += f', track {self.current_track} -> {self.current_track + 1}'
             print(msg)
             self.current_track = (self.current_track + 1) % self.tracks
         else: # DOWN
-            msg = f'disk {self.diskno}, step down {direction:02x}'
+            msg = f'disk {self.driveno}, step down {direction:02x}'
             msg += f', track {self.current_track} -> {self.current_track - 1}'
             print(msg)
             if self.current_track == 0:
@@ -36,7 +123,6 @@ class Disk:
         assert 0 <= track < self.tracks
         assert 0 <= byte < self.bytes_per_track, byte
         self.current_byte = (self.current_byte + 1) % self.bytes_per_track
-        self.bytes_read += 1
         return self.data[track][byte]
 
 
@@ -47,7 +133,19 @@ class Disk:
     def isbusy(self):
         while self.current_byte not in self.marks[self.current_track]:
             self.current_byte = (self.current_byte + 1) % self.bytes_per_track
+        #print(f'mark {self.current_byte}')
         return True
+
+
+    def status(self):
+        status = statusbits["sdready"]
+        if self.isindex():
+            status += statusbits["index"]
+        if self.isbusy():
+            status += statusbits["busy"]
+        if self.istrack0():
+            status += statusbits["track0"]
+        return status
 
 
 statusbits = {
@@ -59,36 +157,31 @@ statusbits = {
 }
 
 class Control:
-    def __init__(self, diskno, fs):
-        self.track0 = 0
-        self.trackdir = 0
-        self.write = 0
-        self.disk = Disk(diskno, fs)
-        self.selected_drive = 0
+    def __init__(self, type, fs_list):
+        self.disk = Disk(type, fs_list)
 
 
     def data_in(self) -> int:
         val = self.disk.readbyte()
-        # print(f'disk {self.disk.disk}, track {self.disk.current_track}, ' + \
-        #       f'byte {self.disk.current_byte}, val {val:02x}, count {self.disk.bytes_read}')
         return val
 
 
     def control1(self, val):
-        if val == 0:
-            self.disk.current_byte = 0
+        drive = val & 0x7f
+        side = val >> 7
+        if drive == 0:
+            self.disk.deselect_drive()
             return
-        #side = val >> 7
-        drive = val #& 0x7f
-        assert drive in [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80], f'val: 0x{val:02x}'
+
+        assert drive in [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40], f'val: 0x{drive:02x}'
         i = 1
         while True:
             if drive == 1:
                 break
             drive /= 2
             i += 1
-        #assert side == 0
-        self.selected_drive = i
+        assert i in [1, 2, 3, 4, 5, 6, 7]
+        self.disk.select_drive(i)
 
 
     def control2(self, val):
@@ -96,24 +189,8 @@ class Control:
         if val & 0x20: # Step
             self.disk.step(stepdir)
         if val & 0x80:
-            self.write = 1
+            self.disk.write()
 
 
     def status(self):
-        if self.disk.diskno == 2:
-            return 0 # Lite, for Magnus use 0x01
-        assert self.disk.diskno == 1
-        track = self.disk.current_track
-        status = 0
-        if self.selected_drive == 1:
-            status = statusbits["sdready"]
-        else:
-            print(f'disk {self.disk.diskno} drive {self.selected_drive} not ready')
-        if self.disk.current_byte == 0:
-            status += statusbits["index"]
-        if self.disk.isbusy():
-            status += statusbits["busy"]
-        if track == 0:
-            status += statusbits["track0"]
-        #print(f'disk {self.disk.disk}, track {track}, CurrByte {self.disk.current_byte}, TotBytes {self.disk.bytes_read}, status {status:02x}')
-        return status
+        return self.disk.status()

@@ -12,9 +12,9 @@ def isprintable(c):
 
 
 class IO:
-    def __init__(self, m, fs):
-        self.disk1 = disk.Control(1, fs)
-        self.disk2 = disk.Control(2, fs)
+    def __init__(self, m, floppys, hds):
+        self.floppy = disk.Control('floppy', floppys)
+        self.hdd = disk.Control('hdd', hds)
         self.display = display.Display()
         self.m = m
         self.incb = {}
@@ -38,15 +38,18 @@ class IO:
         self.register_in_cb( 0x05, self.handle_printer_in)
         self.register_out_cb(0x07, self.handle_printer_out_7)
 
-        # Maybe these are really disk IO ?
+        # Floppy disk ?
         self.register_in_cb( 0x09, self.handle_disk_in_09)
         self.register_in_cb( 0x0a, self.handle_disk_in_0a)
         self.register_out_cb(0x09, self.handle_disk_out_09)
         self.register_out_cb(0x0a, self.handle_disk_out_0a)
         self.register_out_cb(0x0b, self.handle_disk_out_0b)
-        # possibly not disk?
-        self.register_in_cb(0x0c, self.handle_disk_in_0c)
 
+        # Unknown
+        self.register_in_cb( 0x0c, self.handle_disk_in_0c)
+        self.register_out_cb(0x0c, self.handle_disk_out_0c)
+
+        # Hard disk ?
         self.register_in_cb( 0x19, self.handle_disk_in_19)
         self.register_in_cb( 0x1a, self.handle_disk_in_1a)
         self.register_out_cb(0x1a, self.handle_disk_out_1a)
@@ -79,11 +82,10 @@ class IO:
 
     def handle_io_out(self, outaddr, outval):
         outaddr = outaddr & 0xff
-        #print(f'handle_io_out({outaddr:02x},{outval:02x}({chr(outval)}))')
         if outaddr in self.outcb:
             self.outcb[outaddr](outval)
         else:
-            self.print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
+            print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
             sys.exit()
 
 
@@ -175,60 +177,59 @@ class IO:
     ### Disk 1? Data and Control
     ### From "Q1 ASM IO addresses usage Q1 Lite" p. 77 - 80
     def handle_disk_out_0a(self, val):
-        if val != 0:
-            self.print(f'IO out - disk1 (control 1 ) - (0x{val:02x})')
-        self.disk1.control1(val)
+        if val:
+            self.print(f'IO out - floppy (control 1 ) - (0x{val:02x})')
+        self.floppy.control1(val)
+
 
     def handle_disk_out_0b(self, val):
-        if val != 0:
-            self.print(f'IO out - disk1 (control 2 ) - (0x{val:02x})')
-        self.disk1.control2(val)
+        if val:
+            self.print(f'IO out - floppy (control 2 ) - (0x{val:02x})')
+        self.floppy.control2(val)
 
 
     def handle_disk_out_09(self, val):
-        self.print(f'IO out - disk1 (data) - (0x{val:02x})')
+        self.print(f'IO out - floppy (data) - (0x{val:02x})')
 
 
     def handle_disk_in_0a(self):
-        retval = self.disk1.status()
-        t = self.disk1.disk.current_track
-        b = self.disk1.disk.current_byte
-        #self.print(f'IO in  - disk1 (0xa) (status): 0x{retval:02x}, t{t}, b{b}')
+        retval = self.floppy.status()
         return retval
 
     def handle_disk_in_09(self):
-        t = self.disk1.disk.current_track
-        b = self.disk1.disk.current_byte
-        retval = self.disk1.data_in()
-        #print(f'IO in  - disk1 (0x9) (data): 0x{retval:02x}, t{t}, b{b}')
+        retval = self.floppy.data_in()
         return retval
 
-    # possibly not disk, could be rs232
+    # possibly not disk, currently unconfirmed
     def handle_disk_in_0c(self):
-        self.print('IO in  - disk1 ???????????? - (0xff)')
+        print('IO in  - unknown device - (0xff)')
         return 0xff
+
+
+    def handle_disk_out_0c(self, val):
+        print(f'IO out - unknown device - (0x{val:02x})')
 
 
     ### Disk 2 Data and Control
     ### From "Q1 Assembler" p. 52 - 54
     def handle_disk_in_19(self):
-        retval =self.disk2.data_in()
-        self.print(f'IO in  - disk2 (data): {retval}')
+        retval = self.hdd.data_in()
+        self.print(f'IO in  - hdd (data): {retval}')
         return retval
 
     def handle_disk_in_1a(self):
-        retval = self.disk2.status()
-        self.print(f'IO in  - disk2 (status): {retval}')
+        retval = self.hdd.status()
+        self.print(f'IO in  - hdd (status): {retval}')
         return retval
 
 
     def handle_disk_out_1a(self, val):
-        if val != 0:
-            self.print(f'IO out - disk2 (control 1 ) - (0x{val:02x})')
-        self.disk2.control1(val)
+        if val:
+            self.print(f'IO out - hdd (control 1 ) - (0x{val:02x})')
+        self.hdd.control1(val)
 
 
     def handle_disk_out_1b(self, val):
         if val != 0:
-            self.print(f'IO out - disk2 (control 2 ) - (0x{val:02x})')
-        self.disk2.control2(val)
+            self.print(f'IO out - hdd (control 2 ) - (0x{val:02x})')
+        self.hdd.control2(val)
