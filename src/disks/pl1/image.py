@@ -8,6 +8,8 @@ import filesys
 
 pl1fs = filesys.FileSys()
 
+
+# Note, using this method as we have no track 0
 offset = 0
 for i, lst in enumerate(t1.data):
     offset = pl1fs.rawrecord(1, offset, lst)
