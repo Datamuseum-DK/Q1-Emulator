@@ -2,19 +2,19 @@
 Annotated disassembly
 =====================
 
-From **disassembly.py -a** on 2024 08 24
+From **disassembly.py -a** on 2024 09 10
 
 .. code-block:: console
 
   loading program: Combined Q1 image from IC25-IC32
-  loaded 1024 bytes from roms/JDC/IC25.bin at address 0000h
-  loaded 1024 bytes from roms/JDC/IC26.bin at address 0400h
-  loaded 1024 bytes from roms/JDC/IC27.bin at address 0800h
-  loaded 1024 bytes from roms/JDC/IC28.bin at address 0c00h
-  loaded 1024 bytes from roms/JDC/IC29.bin at address 1000h
-  loaded 1024 bytes from roms/JDC/IC30.bin at address 1400h
-  loaded 1024 bytes from roms/JDC/IC31.bin at address 1800h
-  loaded 1024 bytes from roms/JDC/IC32.bin at address 1c00h
+  loaded 1024 bytes from roms/JDC/IC25.BIN at address 0000h
+  loaded 1024 bytes from roms/JDC/IC26.BIN at address 0400h
+  loaded 1024 bytes from roms/JDC/IC27.BIN at address 0800h
+  loaded 1024 bytes from roms/JDC/IC28.BIN at address 0c00h
+  loaded 1024 bytes from roms/JDC/IC29.BIN at address 1000h
+  loaded 1024 bytes from roms/JDC/IC30.BIN at address 1400h
+  loaded 1024 bytes from roms/JDC/IC31.BIN at address 1800h
+  loaded 1024 bytes from roms/JDC/IC32.BIN at address 1c00h
 
   ;jump tables
   0000 c3 e5 01     ; jp 0x1e5             | reset START
@@ -200,8 +200,8 @@ From **disassembly.py -a** on 2024 08 24
   0118 7a           ; ld a, d              |
   0119 b7           ; or a                 |
   011a 7b           ; ld a, e              |
-  011b ea           ; db 0xea              |
-  011c 22 01 79     ; ld (0x7901), hl      |
+  011b ea 22 01     ; jp pe, 0x122         |
+  011e 79           ; ld a, c              |
   011f d6 2c        ; sub 0x2c             |
   0121 83           ; add a, e             |
   0122 2d           ; dec l                |
@@ -877,8 +877,7 @@ From **disassembly.py -a** on 2024 08 24
   055c 47           ; ld b, a              |
   055d 04           ; inc b                |
   055e 0e 03        ; ld c, 0x3            |
-  0560 ed           ; db 0xed              | z80 otir instruction - B bytes from HL to port C
-  0561 b3           ; or e                 |
+  0560 ed b3        ; otir                 | z80 otir instruction - B bytes from HL to port C
   0562 c9           ; ret                  |
 
   ;handle tab clear (clears tab bit in hl?)
@@ -930,6 +929,15 @@ From **disassembly.py -a** on 2024 08 24
   05a1 f2 83 05     ; jp p, 0x583          |
   05a4 0e 00        ; ld c, 0x0            |
   05a6 18 db        ; jr 0x583             |
+
+  ;unknown (on key 0x9e?)
+  05a8 cd a0 02     ; call 0x2a0           |
+  05ab 81           ; add a, c             |
+  05ac 4f           ; ld c, a              |
+  05ad 1a           ; ld a, (de)           |
+  05ae f2 83 05     ; jp p, 0x583          |
+  05b1 0e 7f        ; ld c, 0x7f           |
+  05b3 18 ce        ; jr 0x583             |
 
   ;get tab position bit??
   05b5 79           ; ld a, c              |
@@ -1609,13 +1617,11 @@ From **disassembly.py -a** on 2024 08 24
   09d1 d3 19        ; out (0x19), a        |
   09d3 d2 c8 0a     ; jp nc, 0xac8         |
   09d6 86           ; add a, (hl)          |
-  09d7 ed           ; db 0xed              |
-  09d8 a3           ; and e                |
+  09d7 ed a3        ; outi                 |
   09d9 20 fb        ; jr nz, 0x9d6         |
   09db 43           ; ld b, e              |
   09dc 86           ; add a, (hl)          |
-  09dd ed           ; db 0xed              |
-  09de a3           ; and e                |
+  09dd ed a3        ; outi                 |
   09df 20 fb        ; jr nz, 0x9dc         |
   09e1 15           ; dec d                |
   09e2 28 05        ; jr z, 0x9e9          |
@@ -1728,13 +1734,11 @@ From **disassembly.py -a** on 2024 08 24
   0ac2 32 9b 40     ; ld (0x409b), a       | set NRT   (disk record count) = a
   0ac5 c3 9f 09     ; jp 0x99f             |
   0ac8 86           ; add a, (hl)          |
-  0ac9 ed           ; db 0xed              |
-  0aca a3           ; and e                |
+  0ac9 ed a3        ; outi                 |
   0acb 43           ; ld b, e              |
   0acc 05           ; dec b                |
   0acd 86           ; add a, (hl)          |
-  0ace ed           ; db 0xed              |
-  0acf a3           ; and e                |
+  0ace ed a3        ; outi                 |
   0ad0 c3 dc 09     ; jp 0x9dc             |
   0ad3 dd 4e 0c     ; ld c, (ix + 0xc)     |
   0ad6 dd 46 0d     ; ld b, (ix + 0xd)     |
@@ -2759,13 +2763,11 @@ From **disassembly.py -a** on 2024 08 24
   11bf d3 09        ; out (0x9), a         | write Data Record identifier 0x9b
   11c1 d2 b6 12     ; jp nc, 0x12b6        |
   11c4 86           ; add a, (hl)          |
-  11c5 ed           ; db 0xed              | write (hl+i) to disk, i = 0 to b
-  11c6 a3           ; and e                |
+  11c5 ed a3        ; outi                 | write (hl+i) to disk, i = 0 to b
   11c7 20 fb        ; jr nz, 0x11c4        |
   11c9 43           ; ld b, e              |
   11ca 86           ; add a, (hl)          |
-  11cb ed           ; db 0xed              | write (hl+i) to disk, i = 0 to b
-  11cc a3           ; and e                |
+  11cb ed a3        ; outi                 | write (hl+i) to disk, i = 0 to b
   11cd 20 fb        ; jr nz, 0x11ca        |
   11cf 15           ; dec d                |
   11d0 28 05        ; jr z, 0x11d7         |
@@ -2882,13 +2884,11 @@ From **disassembly.py -a** on 2024 08 24
   12b0 32 9b 40     ; ld (0x409b), a       | set NRT   (disk record count) = a
   12b3 c3 8d 11     ; jp 0x118d            |
   12b6 86           ; add a, (hl)          |
-  12b7 ed           ; db 0xed              |
-  12b8 a3           ; and e                |
+  12b7 ed a3        ; outi                 |
   12b9 43           ; ld b, e              |
   12ba 05           ; dec b                |
   12bb 86           ; add a, (hl)          |
-  12bc ed           ; db 0xed              |
-  12bd a3           ; and e                |
+  12bc ed a3        ; outi                 |
   12be c3 ca 11     ; jp 0x11ca            |
 
   ;Set PART1 and PART2
@@ -3805,8 +3805,7 @@ From **disassembly.py -a** on 2024 08 24
   186c db 1f        ; in a, (0x1f)         |
   186e b9           ; cp c                 |
   186f 19           ; add hl, de           |
-  1870 ea           ; db 0xea              |
-  1871 18 df        ; jr 0x1852            |
+  1870 ea 18 df     ; jp pe, 0xdf18        |
   1873 18 b0        ; jr 0x1825            |
   1875 1f           ; rra                  |
   1876 f2 1f e1     ; jp p, 0xe11f         |
