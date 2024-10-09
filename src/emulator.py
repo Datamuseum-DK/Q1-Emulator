@@ -83,6 +83,11 @@ def emulator(args):
         if icount % args.dumpfreq == 0 and args.hexdump:
             cpu.mem.hexdump(0x2000, 0x10000 - 0x2000) # dump RAM part of memory
 
+        if pc == 0x196b:
+            print('PL/1 0x26 PUT char str')
+        elif pc == 0x1950:
+            print('PL/1 0x25 GET char str from input')
+
         # main cpu emulation step
         cpu.step() # does the actual emulation of the next instruction
 
@@ -111,6 +116,10 @@ def emulator(args):
 
                 if ch == 0x222b:       # opt-b -> hexdump
                     cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)
+                elif ch == 402: # opt-f function keys
+                    k = input("fn key:\n")
+                    print('key:', k)
+                    int38(cpu, io, kc.okey(k))
                 elif ch == 8224: # opt-t
                     args.decode = not args.decode
                 elif ch == 170: # opt-a FDs

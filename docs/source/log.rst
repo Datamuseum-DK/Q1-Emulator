@@ -500,3 +500,19 @@ debugdisk (felsökningsdiskett) from Mattis.
   :align: center
 
   DINDEX program running.
+
+
+2024 10 09
+----------
+
+Finally got around to investigate the use of the Fn function keys. These
+are used as function selectors in the DINDEX program. The ROS user's manual
+mentions some reserved ranges (under PROCH) but the text was a bit unclear
+to me and it certainly was not obvious where F1 started. But a bit of
+exprimentation finally revealed that F1 == 0x11. The rest was quickly
+verified after that. So far only F5 seems to cause me problems, but the
+rest of the range F1 - F9 has been verified.
+
+I also figured out a way to 'debug' the PL/1 programs. Basically I can add
+the PC address for each function to a disctionary and use that to print out
+some text to provide an indication of the program flow.

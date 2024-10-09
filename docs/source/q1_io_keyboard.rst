@@ -100,3 +100,33 @@ For keyboard input, the following codes are currently known:
    * - 0x03
      - TAB SET
      - Cursor position is a tab position
+
+In addition, functions keys F1 - F9 are defined as
+
+ .. list-table:: Key codes for function keys (F1 - F9)
+    :header-rows: 1
+
+    * - Key Code
+      - Function Key
+    * - 0x11
+      - F1
+    * - 0x12
+      - F2
+    * - 0x13
+      - F3
+    * - 0x14
+      - F4
+    * - 0x15
+      - F5
+    * - 0x16
+      - F6
+    * - 0x17
+      - F7
+    * - 0x18
+      - F8
+    * - 0x19
+      - F9
+
+These were first identified for their use in the DINDEX program. So far
+the following have been verified: F1, F2, F3, F4, F6, F7, F8, F9. F5 seems
+not to work, but this could be due to unimplemented IO (needs to be investigated)

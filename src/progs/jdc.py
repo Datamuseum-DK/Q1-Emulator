@@ -280,10 +280,10 @@ jdc = {
         0x1755: 'filename match on record',
         0x1779: 'checksum good on data record',
         0x177b: 'end-of-record marker',
-        0x1800: 'PL/1 AAAA',
-        0x1803: 'PL/1 return from subroutine?',
-        0x1806: 'PL/1 CCCC',
-        0x1809: 'PL/1 RUN Microcode Program',
+        0x1800: 'PL/1 NORMY (ROS p.19)',
+        0x1803: 'PL/1 GIN (ROS p.19)',
+        0x1806: 'PL/1 CLEAR (ROS p.19)',
+        0x1809: 'PL/1 START (ROS p.19)',
         0x187c: 'Interpretive Program Counter',
         0x187f: 'get instruction (or data)',
         0x1882: 'jump if a > 63 (is address?)',
@@ -429,7 +429,7 @@ jdc = {
         [0x0439, 0x044d, 'UNEXPLORED'],
         [0x044e, 0x0457, 'print A, E times (entry 0x450)'],
         [0x0458, 0x047c, 'display() - string=HL, len=C'],
-        [0x047d, 0x04a8, 'UNEXPLORED'],
+        [0x047d, 0x04a8, 'KEYIN()'],
         [0x04a9, 0x04b2, 'wait for keyboard'],
         [0x04B3, 0x04CA, 'clear display?'],
         [0x04CB, 0x04D0, 'disable interrupt, get key?, enable interrupt'],
@@ -538,6 +538,7 @@ psmcadd = {
             # PL/1 Interpretive Program Counter
             ["snippet", [0x00, 0x80],        0x40fe], # set IPC = x8000
             # Setup two numbers to be added, run PL/1 program
+            # z80 assembler code
             ["snippet", [0x00],              0x6000], # nop (for trace)
             ["snippet", [0x21, 0x80, 0x40],  0x6001], # hl = 4080
             ["snippet", [0xf9],              0x6004], # SP = 4080
