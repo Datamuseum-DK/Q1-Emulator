@@ -537,7 +537,7 @@ a linefeed (0xa) the following neatly formatted output is produced:
 
 .. code-block:: console
 
-  Maximum  First  Last          Records/
+                             Maximum  First  Last          Records/
   Name     Records   Length  Records  Track  Track  Tracks  Track
 
   INDEX       14       40       88      0      0      1      88
