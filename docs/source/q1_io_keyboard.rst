@@ -57,7 +57,7 @@ Some keys have built-in LEDs to indicate state: Shift Lock, 3RD shift(?),
 
 
 Keyboard codes
---------------
+^^^^^^^^^^^^^^
 
 For keyboard input, the following codes are currently known:
 
