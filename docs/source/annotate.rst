@@ -4,7 +4,7 @@ Annotated disassembly
 
 From **disassembly.py -a** on 2024 10 10
 
-.. code-block:: console
+.. code-block:: text
 
   loading program: Combined Q1 image from IC25-IC32
   loaded 1024 bytes from roms/JDC/IC25.BIN at address 0000h

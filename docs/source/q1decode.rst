@@ -11,7 +11,7 @@ nearly useful python list in it.
 
 The procedure is as follows
 
-.. code-block:: console
+.. code-block:: text
 
     > gcc q1decode.c && cat Q1DISKS/PL1/C_S0T01.000 | ./a.out 255
     > rm -f output.py

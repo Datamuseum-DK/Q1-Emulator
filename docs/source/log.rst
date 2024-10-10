@@ -60,7 +60,7 @@ with information compatible with figure 2 on page 17 (same document):
 
 Each record looks like this
 
-.. code-block:: console
+.. code-block:: text
 
     |0x9e|Trk|Sect|Csum|0xa|x00 x00 x00 x00 x00 x00|0x9b|Trk|Sect|Csum|0xa|1234|x00 x00 x00 x00 x00 x00|
 
@@ -79,7 +79,7 @@ The above data format was wrong. The end-of-record value is 0x10, not 0xa. Also 
 Despite the picture on page 17, it seems that when reading a file desctiptor in a
 data record (0x9b), the checksum comes AFTER the FD and User data:
 
-.. code-block:: console
+.. code-block:: text
 
   |0x9b| FD data (24 bytes) | User data | Csum | 0x10
 
@@ -93,7 +93,7 @@ Also, there does not seem to be a 0x10 after the ID records.
 The filesystem can be initialised by adding ID and data blocks or even
 manyally writing to certain locations:
 
-.. code-block:: console
+.. code-block:: text
 
     disk.idrecord(  2189, 17, 0)
     disk.idrecord(  2193, 0, 0)
@@ -109,7 +109,7 @@ manyally writing to certain locations:
 After messing with the file system as above (should probably implement a loader
 soon), At least I get the OS to acknowledge that the disk I made was bad:
 
-.. code-block:: console
+.. code-block:: text
 
   DISK OPEN
   DISK KEY
@@ -171,7 +171,7 @@ Manual p. 3 and 4):
 
 The funtionality was verified by trace from the emulation:
 
-.. code-block:: console
+.. code-block:: text
 
   6001 21 80 40     ; ld hl, 0x4080             | sp=0000, a=00    bc=0000, de=0000, hl=0000, ix=0000, iy=0000
   6004 f9           ; ld sp, hl                 | sp=0000, a=00    bc=0000, de=0000, hl=4080, ix=0000, iy=0000
@@ -262,7 +262,7 @@ Testing more pseudocode instructions: multiply, divide and binary to string.
 
 Here 0x7fff is converted into ascii 32767 as verified from the hexdump:
 
-.. code-block:: console
+.. code-block:: text
 
   ########### HEXDUMP 0x2000 - 0x10000 ####################################
   ....
@@ -297,7 +297,7 @@ This clarified the sector numbering. converted testdiskette C_S0T00.000 into
 a python structure which is loaded when creating the filesystem. There are 23
 file on the disk, including the special INDEX file.
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 emulator.py
   INDEX:  INDEX
@@ -350,7 +350,7 @@ fluxsamples provided by Mattis Lind.
 
 For example.
 
-.. code-block:: console
+.. code-block:: text
 
   src/disks/fluxsamples> python3 image.py
   ...
@@ -384,7 +384,7 @@ loading and running the 'SCR' program from (emulated) disk.
   This marks a major milestone in this project. The sequence of commands that
   verifies this are
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 emulator.py
   > SCR <enter>
@@ -535,7 +535,7 @@ F5 definitely seems to trigger printing via out() to the undocumented device
 0xc. By collecting the output in a buffer and printing it out when receiving
 a linefeed (0xa) the following neatly formatted output is produced:
 
-.. code-block:: console
+.. code-block:: text
 
                              Maximum  First  Last          Records/
   Name     Records   Length  Records  Track  Track  Tracks  Track

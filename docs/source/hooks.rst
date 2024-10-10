@@ -72,7 +72,7 @@ Programs can be annotated with points of interest (pois), function names (funcs)
 and ranges (known_ranges). Finally, they also have a start address for
 setting the initial value of the program counter.
 
-.. code-block:: console
+.. code-block:: text
 
   loop = {
       "descr": "Program desription text",

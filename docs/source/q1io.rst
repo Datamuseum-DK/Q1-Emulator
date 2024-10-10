@@ -93,7 +93,7 @@ Update 2024 10 10
 
 0xc seems to be a printer address - see log entry for 2024 10 10.
 
-.. code-block:: console
+.. code-block:: text
 
   ...
   0B0B 6C           ; ld l, h         |
@@ -119,7 +119,7 @@ at 0x2A0 seems to be testing **Bit 3** to select a 80 character width and
 **Bit 4** to select 40 bytes:
 
 
-.. code-block:: console
+.. code-block:: text
 
   <<<<< Display width? >>>>>
   02A0 DB 04        ; in a, (0x4)     |
