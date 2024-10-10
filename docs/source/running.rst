@@ -35,6 +35,8 @@ the keys (see emulator.py):
      - MacBook key
    * - GO
      - Option-g
+   * - STOP
+     - Option-s
    * - CORR
      - Backspace
    * - RETURN
@@ -48,8 +50,24 @@ the keys (see emulator.py):
    * - DEL CHAR
      - Option-d
 
-In addition, I use Option-b to trigger hexdumps (much used) and Option-p
-to print Z80 registers (rarely used).
+
+ .. list-table:: Special functions
+    :header-rows: 1
+
+   * - MacBook key
+     - Function
+   * - Option-f
+     - Function Keys (F1 - F9) by user input
+   * - Option-b
+     - hexdump of modified parts of memory
+   * - Option-r
+     - Reset button
+   * - Option-t
+     - Toggle instruction decode
+   * - Option-a
+     - print file descriptors
+
+
 
 Execution decode
 ^^^^^^^^^^^^^^^^
