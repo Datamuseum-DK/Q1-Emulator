@@ -518,12 +518,12 @@ jdc = {
         [0x1878, 0x187b, 'return from subrouine?'],
         [0x187c, 0x1b80, 'run microcode program'],
         [0x1b81, 0x1ba2, 'return from file operations'],
-        [0x1ba3, 0x1ccd, 'UNEXPLORED'],
-        [0x1cce, 0x1d2a, 'aaaa()'],
+        [0x1ba3, 0x1ccd, 'misc PL/1 code'],
+        [0x1cce, 0x1d2a, 'NORMY()'],
         [0x1d2b, 0x1d33, 'increment IPC value'],
-        [0x1d34, 0x1f52, 'UNEXPLORED'],
-        [0x1f53, 0x1f61, 'cccc() - clear 16 bytes in scratch'],
-        [0x1f62, 0x1fff, 'UNEXPLORED'],
+        [0x1d34, 0x1f52, 'misc PL/1 code'],
+        [0x1f53, 0x1f61, 'CLEAR() - clear 16 bytes in scratch'],
+        [0x1f62, 0x1fff, 'misc PL/1 code'],
 
 
     ]

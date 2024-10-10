@@ -56,6 +56,9 @@ Some keys have built-in LEDs to indicate state: Shift Lock, 3RD shift(?),
        - Keyboard click
 
 
+ Keyboard codes
+ --------------
+
 For keyboard input, the following codes are currently known:
 
 .. list-table:: Key codes
@@ -64,6 +67,12 @@ For keyboard input, the following codes are currently known:
    * - Key Code
      - Key Name
      - Description
+   * - 0x00
+     - No key
+     - returned from in() when no keypress was detected
+   * - 0x01
+     -
+     - unknown
    * - 0x02
      - TAB CLR
      - Cursor position is not a tab position
@@ -73,9 +82,33 @@ For keyboard input, the following codes are currently known:
    * - 0x04
      - CORR
      - Move cursor back one position
+   * - 0x05
+     -
+     - unknown function key (ROS p. 10)
+   * - 0x06
+     -
+     - unknown function key (ROS p. 10)
+   * - 0x07
+     -
+     - unknown function key (ROS p. 10)
+   * - 0x08
+     -
+     - unknown
    * - 0x09
      - TAB
      - Move to next tab
+   * - 0x0a
+     -
+     - unknown
+   * - 0x0b
+     -
+     - unknown
+   * - 0x0c
+     -
+     - unknown function key
+   * - 0x0d
+     -
+     - unknown function key
    * - 0x0e
      - GO (inferred)
      - exit processor wait loop
@@ -85,6 +118,36 @@ For keyboard input, the following codes are currently known:
    * - 0x10
      - REV TAB
      - Move to previous tab
+   * - 0x11
+     - F1
+     -
+   * - 0x12
+     - F2
+     -
+   * - 0x13
+     - F3
+     -
+   * - 0x14
+     - F4
+     -
+   * - 0x15
+     - F5
+     -
+   * - 0x16
+     - F6
+     -
+   * - 0x17
+     - F7
+     -
+   * - 0x18
+     - F8
+     -
+   * - 0x19
+     - F9
+     -
+   * - 0x1a
+     -
+     - unknown
    * - 0x1b
      - CLEAR ENTRY
      - Clear all keyboard input
@@ -94,39 +157,19 @@ For keyboard input, the following codes are currently known:
    * - 0x1d
      - DEL CHAR
      - Delete char under cursor and move text right of cursor
+   * - 0x1e
+     -
+     - unknown
    * - 0x1f
      - INSERT MODE
      - When entering new chars, move text right of cursor
-   * - 0x03
-     - TAB SET
-     - Cursor position is a tab position
+   * - 0x20 - 0x7f
+     - ASCII
+     - precise range is unknown
+   * - 0x83 - 0x97
+     -
+     - unknown function keys
 
-In addition, functions keys F1 - F9 are defined as
 
- .. list-table:: Key codes for function keys (F1 - F9)
-    :header-rows: 1
-
-    * - Key Code
-      - Function Key
-    * - 0x11
-      - F1
-    * - 0x12
-      - F2
-    * - 0x13
-      - F3
-    * - 0x14
-      - F4
-    * - 0x15
-      - F5
-    * - 0x16
-      - F6
-    * - 0x17
-      - F7
-    * - 0x18
-      - F8
-    * - 0x19
-      - F9
-
-These were first identified for their use in the DINDEX program. So far
-the following have been verified: F1, F2, F3, F4, F6, F7, F8, F9. F5 seems
-not to work, but this could be due to unimplemented IO (needs to be investigated)
+The function keys were first identified from their use in the DINDEX program. So far
+the following have been verified: F1 - F9.

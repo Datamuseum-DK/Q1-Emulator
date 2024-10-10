@@ -2,7 +2,7 @@
 Annotated disassembly
 =====================
 
-From **disassembly.py -a** on 2024 09 10
+From **disassembly.py -a** on 2024 10 10
 
 .. code-block:: console
 
@@ -741,7 +741,7 @@ From **disassembly.py -a** on 2024 09 10
   047b fb           ; ei                   |
   047c c9           ; ret                  |
 
-  ;UNEXPLORED
+  ;KEYIN()
   047d e5           ; push hl              |
   047e cd a9 04     ; call 0x4a9           |
   0481 d1           ; pop de               |
@@ -3718,10 +3718,10 @@ From **disassembly.py -a** on 2024 09 10
   17ff ff           ; rst 0x38             |
 
   ;PL/1 jump vectors
-  1800 c3 ce 1c     ; jp 0x1cce            | PL/1 AAAA
-  1803 c3 78 18     ; jp 0x1878            | PL/1 return from subroutine?
-  1806 c3 53 1f     ; jp 0x1f53            | PL/1 CCCC
-  1809 c3 7c 18     ; jp 0x187c            | PL/1 RUN Microcode Program
+  1800 c3 ce 1c     ; jp 0x1cce            | PL/1 NORMY (ROS p.19)
+  1803 c3 78 18     ; jp 0x1878            | PL/1 GIN (ROS p.19)
+  1806 c3 53 1f     ; jp 0x1f53            | PL/1 CLEAR (ROS p.19)
+  1809 c3 7c 18     ; jp 0x187c            | PL/1 START (ROS p.19)
 
   ;PL/1 instruction vectors
   180c 9d           ; sbc a, l             |
@@ -4296,7 +4296,7 @@ From **disassembly.py -a** on 2024 09 10
   1b9d 22 f7 40     ; ld (0x40f7), hl      |
   1ba0 c3 7c 18     ; jp 0x187c            | run loaded program!
 
-  ;UNEXPLORED
+  ;misc PL/1 code
   1ba3 cd 18 08     ; call 0x818           | call (error) REPORT
   1ba6 c3 97 1b     ; jp 0x1b97            |
   1ba9 2a f9 40     ; ld hl, (0x40f9)      |
@@ -4472,7 +4472,7 @@ From **disassembly.py -a** on 2024 09 10
   1cca f1           ; pop af               |
   1ccb c3 7c 18     ; jp 0x187c            | get next instr or address
 
-  ;aaaa()
+  ;NORMY()
   1cce 11 09 00     ; ld de, 0x9           |
   1cd1 4e           ; ld c, (hl)           |
   1cd2 eb           ; ex de, hl            |
@@ -4540,7 +4540,7 @@ From **disassembly.py -a** on 2024 09 10
   1d30 22 fe 40     ; ld (0x40fe), hl      |
   1d33 c9           ; ret                  |
 
-  ;UNEXPLORED
+  ;misc PL/1 code
   1d34 e1           ; pop hl               | INST 1C - Go to address on top of stack
   1d35 c3 7f 18     ; jp 0x187f            |
   1d38 e1           ; pop hl               | INST 1D - Go to address on top of stack (conditional)
@@ -4893,7 +4893,7 @@ From **disassembly.py -a** on 2024 09 10
   1f4f e1           ; pop hl               |
   1f50 c3 d5 1e     ; jp 0x1ed5            |
 
-  ;cccc() - clear 16 bytes in scratch
+  ;CLEAR() - clear 16 bytes in scratch
   1f53 06 08        ; ld b, 0x8            |
   1f55 21 0f 42     ; ld hl, 0x420f        |
   1f58 97           ; sub a                |
@@ -4905,7 +4905,7 @@ From **disassembly.py -a** on 2024 09 10
   1f5e c2 59 1f     ; jp nz, 0x1f59        |
   1f61 c9           ; ret                  |
 
-  ;UNEXPLORED
+  ;misc PL/1 code
   1f62 83           ; add a, e             |
   1f63 27           ; daa                  |
   1f64 d2 69 1f     ; jp nc, 0x1f69        |

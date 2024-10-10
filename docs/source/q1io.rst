@@ -89,6 +89,10 @@ Neither seem fully compatible with the JDC roms :ref:`ROMS` as
 Also I've seen **in()** commands to address 0xc which isn't documented in
 either.
 
+Update 2024 10 10
+
+0xc seems to be a printer address - see log entry for 2024 10 10.
+
 .. code-block:: console
 
   ...

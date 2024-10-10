@@ -517,3 +517,38 @@ rest of the range F1 - F9 has been verified.
 I also figured out a way to 'debug' the PL/1 programs. Basically I can add
 the PC address for each function to a disctionary and use that to print out
 some text to provide an indication of the program flow.
+
+
+2024 10 10
+----------
+
+8:00
+
+Better documentation for keyboard input. Verified that F5 key as used in DINDEX
+causes system halt due to unregistered output hook to address 0xc. This could
+be a printer as the menu says "F5 - Print INDEX on selected drive", but this
+is currently speculation.
+
+Update 9:53
+
+F5 definitely seems to trigger printing via out() to the undocumented device
+0xc. By collecting the output in a buffer and printing it out when receiving
+a linefeed (0xa) the following neatly formatted output is produced:
+
+.. code-block:: console
+
+  Maximum  First  Last          Records/
+  Name     Records   Length  Records  Track  Track  Tracks  Track
+
+  INDEX       14       40       88      0      0      1      88
+  BACKUP      14      255       19      1      1      1      19
+  DISK        36      255       38      2      3      2      19
+  COPY        18      255       19      4      4      1      19
+  SORT         7      255       19      5      5      1      19
+  JDC         25      255       38      6      7      2      19
+  DINDEX      23      255       38      8      9      2      19
+  FARK        43      255       57     10     12      3      19
+  FUDTOG      64      255       76     13     16      4      19
+  FMOMS       74      255       76     17     20      4      19
+  FRAPP       59      255       76     21     24      4      19
+  FBAL        79      255       95     25     29      5      19

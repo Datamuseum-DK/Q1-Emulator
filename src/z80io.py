@@ -16,6 +16,7 @@ class IO:
         self.disk1 = disk.Control(1, fs)
         self.disk2 = disk.Control(2, fs)
         self.display = display.Display()
+        self.prtbuf = "" # temporary hack for 'printer'
         self.m = m
         self.incb = {}
         self.outcb = {}
@@ -44,8 +45,11 @@ class IO:
         self.register_out_cb(0x09, self.handle_disk_out_09)
         self.register_out_cb(0x0a, self.handle_disk_out_0a)
         self.register_out_cb(0x0b, self.handle_disk_out_0b)
-        # possibly not disk?
-        self.register_in_cb(0x0c, self.handle_disk_in_0c)
+
+        # elusive IO
+        # 2024 10 10 - could this be printer (see DINDEX F5)
+        self.register_in_cb(0x0c, self.handle_unkn_in_0c)
+        self.register_out_cb(0x0c, self.handle_unkn_out_0c)
 
         self.register_in_cb( 0x19, self.handle_disk_in_19)
         self.register_in_cb( 0x1a, self.handle_disk_in_1a)
@@ -83,7 +87,7 @@ class IO:
         if outaddr in self.outcb:
             self.outcb[outaddr](outval)
         else:
-            self.print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
+            print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
             sys.exit()
 
 
@@ -203,10 +207,21 @@ class IO:
         #print(f'IO in  - disk1 (0x9) (data): 0x{retval:02x}, t{t}, b{b}')
         return retval
 
-    # possibly not disk, could be rs232
-    def handle_disk_in_0c(self):
-        self.print('IO in  - disk1 ???????????? - (0xff)')
-        return 0xff
+
+    # not disk, possibly printer
+    def handle_unkn_in_0c(self):
+        self.print('IO in  - unknown in for 0xc - (return 0x00)')
+        return 0x00
+
+
+    def handle_unkn_out_0c(self, val):
+        if val == 0xa:
+            print(self.prtbuf)
+            self.prtbuf=""
+        else:
+            self.prtbuf += chr(val)
+
+        #print(f'out(0xc): 0x{val:02x} {chr(val)}')
 
 
     ### Disk 2 Data and Control

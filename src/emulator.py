@@ -87,6 +87,8 @@ def emulator(args):
             print('PL/1 0x26 PUT char str')
         elif pc == 0x1950:
             print('PL/1 0x25 GET char str from input')
+        # elif pc == 0x18cc:
+        #     print('PL/1 0x15 PUT char to selected device driver')
 
         # main cpu emulation step
         cpu.step() # does the actual emulation of the next instruction
