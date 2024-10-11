@@ -28,44 +28,46 @@ On my MacBook Pro the following Q1 keys are implemented. Here,
 they referenced by their variable names, not the names printed on
 the keys (see emulator.py):
 
+
 .. list-table:: Key bindings
-   :header-rows: 1
+  :header-rows: 1
 
-   * - Key Name
-     - MacBook key
-   * - GO
-     - Option-g
-   * - STOP
-     - Option-s
-   * - CORR
-     - Backspace
-   * - RETURN
-     - Return (LF -> CR)
-   * - CLEAR ENTRY
-     - Option-c
-   * - INSERT MODE
-     - Option-m
-   * - CHAR ADV
-     - Option-l
-   * - DEL CHAR
-     - Option-d
+  * - Key Name
+    - MacBook key
+  * - GO
+    - Option-g
+  * - STOP
+    - Option-s
+  * - CORR
+    - Backspace
+  * - RETURN
+    - Return (LF -> CR)
+  * - CLEAR ENTRY
+    - Option-c
+  * - INSERT MODE
+    - Option-m
+  * - CHAR ADV
+    - Option-l
+  * - DEL CHAR
+    - Option-d
 
 
- .. list-table:: Special functions
-    :header-rows: 1
 
-   * - MacBook key
-     - Function
-   * - Option-f
-     - Function Keys (F1 - F9) by user input
-   * - Option-b
-     - hexdump of modified parts of memory
-   * - Option-r
-     - Reset button
-   * - Option-t
-     - Toggle instruction decode
-   * - Option-a
-     - print file descriptors
+.. list-table:: Special functions
+  :header-rows: 1
+
+  * - MacBook key
+    - Function
+  * - Option-f
+    - Function Keys (F1 - F9) by user input
+  * - Option-b
+    - hexdump of modified parts of memory
+  * - Option-r
+    - Reset button
+  * - Option-t
+    - Toggle instruction decode
+  * - Option-a
+    - print file descriptors
 
 
 
