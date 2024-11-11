@@ -553,8 +553,8 @@ a linefeed (0xa) the following neatly formatted output is produced:
   FRAPP       59      255       76     21     24      4      19
   FBAL        79      255       95     25     29      5      19
 
-  However, not all files are printed. For example a multi-track file named 1050
-  is not included. Not sure why.
+However, not all files are printed. For example a multi-track file named 1050
+is not included. Not sure why.
 
 
 2024 11 08
@@ -572,3 +572,18 @@ errors.
   :align: center
 
   PL/1 disk track information (inferred)
+
+
+
+2024 11 10
+----------
+
+Contacted Achim Baqué (https://www.achimbaque.com/#about) who is the new owner
+of the Q1 previously held by Mattis Lind.
+
+
+2024 11 11
+----------
+
+Added new tracks (not working yet) from Felsökningsdiskett. Restructured the
+emulator by creating the Emulator class.
