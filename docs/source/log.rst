@@ -60,7 +60,7 @@ with information compatible with figure 2 on page 17 (same document):
 
 Each record looks like this
 
-.. code-block:: console
+.. code-block:: text
 
     |0x9e|Trk|Sect|Csum|0xa|x00 x00 x00 x00 x00 x00|0x9b|Trk|Sect|Csum|0xa|1234|x00 x00 x00 x00 x00 x00|
 
@@ -79,7 +79,7 @@ The above data format was wrong. The end-of-record value is 0x10, not 0xa. Also 
 Despite the picture on page 17, it seems that when reading a file desctiptor in a
 data record (0x9b), the checksum comes AFTER the FD and User data:
 
-.. code-block:: console
+.. code-block:: text
 
   |0x9b| FD data (24 bytes) | User data | Csum | 0x10
 
@@ -93,7 +93,7 @@ Also, there does not seem to be a 0x10 after the ID records.
 The filesystem can be initialised by adding ID and data blocks or even
 manyally writing to certain locations:
 
-.. code-block:: console
+.. code-block:: text
 
     disk.idrecord(  2189, 17, 0)
     disk.idrecord(  2193, 0, 0)
@@ -109,7 +109,7 @@ manyally writing to certain locations:
 After messing with the file system as above (should probably implement a loader
 soon), At least I get the OS to acknowledge that the disk I made was bad:
 
-.. code-block:: console
+.. code-block:: text
 
   DISK OPEN
   DISK KEY
@@ -171,7 +171,7 @@ Manual p. 3 and 4):
 
 The funtionality was verified by trace from the emulation:
 
-.. code-block:: console
+.. code-block:: text
 
   6001 21 80 40     ; ld hl, 0x4080             | sp=0000, a=00    bc=0000, de=0000, hl=0000, ix=0000, iy=0000
   6004 f9           ; ld sp, hl                 | sp=0000, a=00    bc=0000, de=0000, hl=4080, ix=0000, iy=0000
@@ -262,7 +262,7 @@ Testing more pseudocode instructions: multiply, divide and binary to string.
 
 Here 0x7fff is converted into ascii 32767 as verified from the hexdump:
 
-.. code-block:: console
+.. code-block:: text
 
   ########### HEXDUMP 0x2000 - 0x10000 ####################################
   ....
@@ -297,7 +297,7 @@ This clarified the sector numbering. converted testdiskette C_S0T00.000 into
 a python structure which is loaded when creating the filesystem. There are 23
 file on the disk, including the special INDEX file.
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 emulator.py
   INDEX:  INDEX
@@ -350,7 +350,7 @@ fluxsamples provided by Mattis Lind.
 
 For example.
 
-.. code-block:: console
+.. code-block:: text
 
   src/disks/fluxsamples> python3 image.py
   ...
@@ -384,7 +384,7 @@ loading and running the 'SCR' program from (emulated) disk.
   This marks a major milestone in this project. The sequence of commands that
   verifies this are
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 emulator.py
   > SCR <enter>
@@ -500,3 +500,90 @@ debugdisk (felsökningsdiskett) from Mattis.
   :align: center
 
   DINDEX program running.
+
+
+2024 10 09
+----------
+
+Finally got around to investigate the use of the Fn function keys. These
+are used as function selectors in the DINDEX program. The ROS user's manual
+mentions some reserved ranges (under PROCH on page 10) but the text was a
+bit unclear to me and it certainly was not obvious where F1 started. But a
+bit of exprimentation finally revealed that F1 == 0x11. The rest was quickly
+verified after that. So far only F5 seems to cause me problems, probably
+due to missing emulator functionality, but the
+rest of the range F1 - F9 has been verified.
+
+I also figured out a way to 'debug' the PL/1 programs. Basically I can add
+the PC address for each function to a disctionary and use that to print out
+some text to provide an indication of the program flow.
+
+
+2024 10 10
+----------
+
+8:00
+
+Better documentation for keyboard input. Verified that F5 key as used in DINDEX
+causes system halt due to unregistered output hook to address 0xc. This could
+be a printer as the menu says "F5 - Print INDEX on selected drive", but this
+is currently speculation.
+
+Update 9:53
+
+F5 definitely seems to trigger printing via out() to the undocumented device
+0xc. By collecting the output in a buffer and printing it out when receiving
+a linefeed (0xa) the following neatly formatted output is produced:
+
+.. code-block:: text
+
+                             Maximum  First  Last          Records/
+  Name     Records   Length  Records  Track  Track  Tracks  Track
+
+  INDEX       14       40       88      0      0      1      88
+  BACKUP      14      255       19      1      1      1      19
+  DISK        36      255       38      2      3      2      19
+  COPY        18      255       19      4      4      1      19
+  SORT         7      255       19      5      5      1      19
+  JDC         25      255       38      6      7      2      19
+  DINDEX      23      255       38      8      9      2      19
+  FARK        43      255       57     10     12      3      19
+  FUDTOG      64      255       76     13     16      4      19
+  FMOMS       74      255       76     17     20      4      19
+  FRAPP       59      255       76     21     24      4      19
+  FBAL        79      255       95     25     29      5      19
+
+However, not all files are printed. For example a multi-track file named 1050
+is not included. Not sure why.
+
+
+2024 11 08
+----------
+
+PL/1 disk investigations
+
+Using q1decode from Mattis Lind, I try to reconstruct the contents of the disk
+based on individual track information. Track 0 has no information an thus we
+have no filenames to help us. Many files/tracks seem to have unrecoverable
+errors.
+
+.. figure:: images/pl1diskexcel.png
+  :width: 800
+  :align: center
+
+  PL/1 disk track information (inferred)
+
+
+
+2024 11 10
+----------
+
+Contacted Achim Baqué (https://www.achimbaque.com/#about) who is the new owner
+of the Q1 previously held by Mattis Lind.
+
+
+2024 11 11
+----------
+
+Added new tracks (not working yet) from Felsökningsdiskett. Restructured the
+emulator by creating the Emulator class.

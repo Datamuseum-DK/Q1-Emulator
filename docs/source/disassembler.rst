@@ -3,7 +3,7 @@ Disassembler
 
 Provides disassembler functionality of **programs** with annotations.
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 disassembly.py -a
   ...

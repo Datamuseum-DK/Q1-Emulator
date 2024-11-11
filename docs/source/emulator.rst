@@ -26,7 +26,7 @@ instruction **steps**.
 
 The emulator can be run with disassembly:
 
-.. code-block:: console
+.. code-block:: text
 
   > python3 emulator.py -d
   ; jump to START

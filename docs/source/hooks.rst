@@ -72,7 +72,7 @@ Programs can be annotated with points of interest (pois), function names (funcs)
 and ranges (known_ranges). Finally, they also have a start address for
 setting the initial value of the program counter.
 
-.. code-block:: console
+.. code-block:: text
 
   loop = {
       "descr": "Program desription text",
@@ -110,17 +110,16 @@ preformatted filesystem.
 filesys
 ^^^^^^^
 
-**filesys** provides funtions to create a filesystem. Either by loading
-track files reconstructed by Mattis Lind using **loadtracks()**. The contents
-of the tracks can be inspected by **trackinfo()** which parses the
-records according to Figure 3 of ROS User's Manual (page 18).
-
-Or by constructing tracks using id and data record functions using
-**idrecord()**, **datarecord()** and **datareci()**.
+**filesys** provides funtions to create a filesystem by loading
+track files reconstructed by Mattis Lind or from datamuseum using
+**loadtracks()**. The contents of the tracks can be inspected by
+**trackinfo()** which parses the records according to Figure 3 of
+ROS User's Manual (page 18).
 
 
-q1curses
-^^^^^^^^
+displayemu
+^^^^^^^^^^
 
-Receives the display buffer via UDP and uses **curses** to output to
-screen.
+Emulates the Q1 display by receiving the current display buffer via UDP
+and using **curses** to output to screen with red text on black background
+to roughly look like the physical display.

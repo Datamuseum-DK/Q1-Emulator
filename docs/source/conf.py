@@ -28,8 +28,5 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme' # was 'nature'
-html_theme_options = {
-    "home_page_in_toc": True,
-    "show_navbar_depth": 1
-}
+html_theme_options = {}
 html_static_path = ['_static']

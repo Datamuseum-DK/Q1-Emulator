@@ -1,8 +1,8 @@
 """Module to provide IO hooks for the Q1 Lite"""
 
 import sys
-import disk
-import display
+import devices.disk as disk
+import devices.display as display
 
 #
 
@@ -16,6 +16,7 @@ class IO:
         self.floppy = disk.Control('floppy', floppys)
         self.hdd = disk.Control('hdd', hds)
         self.display = display.Display()
+        self.prtbuf = "" # temporary hack for 'printer'
         self.m = m
         self.incb = {}
         self.outcb = {}
@@ -35,8 +36,9 @@ class IO:
         self.register_out_cb(0x04, self.handle_display_out_ctrl)
         self.register_in_cb( 0x04, self.handle_display_in)
 
-        self.register_in_cb( 0x05, self.handle_printer_in)
+        self.register_in_cb( 0x05, self.handle_printer_in_5)
         self.register_out_cb(0x07, self.handle_printer_out_7)
+        self.register_in_cb( 0x08, self.handle_printer_in_8)
 
         # Floppy disk ?
         self.register_in_cb( 0x09, self.handle_disk_in_09)
@@ -45,9 +47,10 @@ class IO:
         self.register_out_cb(0x0a, self.handle_disk_out_0a)
         self.register_out_cb(0x0b, self.handle_disk_out_0b)
 
-        # Unknown
-        self.register_in_cb( 0x0c, self.handle_disk_in_0c)
-        self.register_out_cb(0x0c, self.handle_disk_out_0c)
+        # elusive IO
+        # 2024 10 10 - could this be printer (see DINDEX F5)
+        self.register_in_cb( 0x0c, self.handle_unkn_in_0c)
+        self.register_out_cb(0x0c, self.handle_unkn_out_0c)
 
         # Hard disk ?
         self.register_in_cb( 0x19, self.handle_disk_in_19)
@@ -160,8 +163,8 @@ class IO:
         print(f'IO out - key [{desc}]')
 
 
-    ### Printer
-    def handle_printer_in(self) -> int:
+    ### Printer 5,6,7 - Serial Impact Printer ?
+    def handle_printer_in_5(self) -> int:
         self.print('IO in  - printer status -  0 (no errors)')
         return 0
 
@@ -172,6 +175,12 @@ class IO:
         else:
             desc = 'unknown command'
         self.print(f'IO out - printer control - {desc}')
+
+
+    ### Printer 8 - Dot Matrix Printer ?
+    def handle_printer_in_8(self) -> int:
+        self.print('IO in  - printer 0x8 status -  0 (no errors)')
+        return 0xF0 # error
 
 
     ### Disk 1? Data and Control
@@ -200,10 +209,21 @@ class IO:
         retval = self.floppy.data_in()
         return retval
 
-    # possibly not disk, currently unconfirmed
-    def handle_disk_in_0c(self):
-        print('IO in  - unknown device - (0xff)')
-        return 0xff
+
+    # not disk, possibly printer
+    def handle_unkn_in_0c(self):
+        self.print('IO in  - unknown in for 0xc - (return 0x00)')
+        return 0x00
+
+
+    def handle_unkn_out_0c(self, val):
+        if val == 0xa:
+            print(self.prtbuf)
+            self.prtbuf=""
+        else:
+            self.prtbuf += chr(val)
+
+        #print(f'{chr(val)}')
 
 
     def handle_disk_out_0c(self, val):
