@@ -36,8 +36,9 @@ class IO:
         self.register_out_cb(0x04, self.handle_display_out_ctrl)
         self.register_in_cb( 0x04, self.handle_display_in)
 
-        self.register_in_cb( 0x05, self.handle_printer_in)
+        self.register_in_cb( 0x05, self.handle_printer_in_5)
         self.register_out_cb(0x07, self.handle_printer_out_7)
+        self.register_in_cb( 0x08, self.handle_printer_in_8)
 
         # Maybe these are really disk IO ?
         self.register_in_cb( 0x09, self.handle_disk_in_09)
@@ -48,7 +49,7 @@ class IO:
 
         # elusive IO
         # 2024 10 10 - could this be printer (see DINDEX F5)
-        self.register_in_cb(0x0c, self.handle_unkn_in_0c)
+        self.register_in_cb( 0x0c, self.handle_unkn_in_0c)
         self.register_out_cb(0x0c, self.handle_unkn_out_0c)
 
         self.register_in_cb( 0x19, self.handle_disk_in_19)
@@ -162,8 +163,8 @@ class IO:
         print(f'IO out - key [{desc}]')
 
 
-    ### Printer
-    def handle_printer_in(self) -> int:
+    ### Printer 5,6,7 - Serial Impact Printer ?
+    def handle_printer_in_5(self) -> int:
         self.print('IO in  - printer status -  0 (no errors)')
         return 0
 
@@ -174,6 +175,12 @@ class IO:
         else:
             desc = 'unknown command'
         self.print(f'IO out - printer control - {desc}')
+
+
+    ### Printer 8 - Dot Matrix Printer ?
+    def handle_printer_in_8(self) -> int:
+        self.print('IO in  - printer 0x8 status -  0 (no errors)')
+        return 0xF0 # error
 
 
     ### Disk 1? Data and Control
@@ -221,7 +228,7 @@ class IO:
         else:
             self.prtbuf += chr(val)
 
-        #print(f'out(0xc): 0x{val:02x} {chr(val)}')
+        #print(f'{chr(val)}')
 
 
     ### Disk 2 Data and Control
