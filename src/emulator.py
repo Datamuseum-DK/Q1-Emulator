@@ -2,12 +2,12 @@
 
 import sys
 import argparse
-import cpu as c
-import kbd
+import devices.cpu as c
+import devices.kbd as kbd
 import match
 import ros as r
-import z80io
-import programs as prg
+import devices.z80io as z80io
+import progs.programs as prg
 import disks.debugdisk.image as ddim
 import disks.datamuseum.image as dmim
 from timeit import default_timer as timer

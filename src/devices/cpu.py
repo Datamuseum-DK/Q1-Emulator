@@ -4,9 +4,9 @@
 
 import sys
 import z80
-import memory
+import devices.memory as memory
 import ros as r
-import z80io
+import devices.z80io as z80io
 
 
 class Cpu:

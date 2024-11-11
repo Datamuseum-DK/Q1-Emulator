@@ -1,8 +1,8 @@
 """Module to provide IO hooks for the Q1 Lite"""
 
 import sys
-import disk
-import display
+import devices.disk as disk
+import devices.display as display
 
 #
 
