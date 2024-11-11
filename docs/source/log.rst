@@ -552,3 +552,23 @@ a linefeed (0xa) the following neatly formatted output is produced:
   FMOMS       74      255       76     17     20      4      19
   FRAPP       59      255       76     21     24      4      19
   FBAL        79      255       95     25     29      5      19
+
+  However, not all files are printed. For example a multi-track file named 1050
+  is not included. Not sure why.
+
+
+2024 11 08
+----------
+
+PL/1 disk investigations
+
+Using q1decode from Mattis Lind, I try to reconstruct the contents of the disk
+based on individual track information. Track 0 has no information an thus we
+have no filenames to help us. Many files/tracks seem to have unrecoverable
+errors.
+
+.. figure:: images/pl1diskexcel.png
+  :width: 800
+  :align: center
+
+  PL/1 disk track information (inferred)
