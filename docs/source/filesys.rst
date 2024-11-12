@@ -34,7 +34,7 @@ A loadable disk image for the Q1 emulator is a python list
   ],
   ]
 
-And can be converted into a **filesys** object .. code-block:: text
+And can be converted into a **filesys** object
 
 .. code-block:: text
 
@@ -47,7 +47,11 @@ far)
 
 .. code-block:: text
 
-  self.io = z80io.IO(self.cpu.m, dmim.dmfs)
+  self.io = z80io.IO(self.cpu.m, fs)
+
+
+Disk images are currently created from two sources using two different methods:
+a modified **q1decode** program from Mattis Lind and a homemade utility **binread.py**.
 
 
 q1decode
