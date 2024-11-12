@@ -8,8 +8,8 @@ import match
 import ros as r
 import devices.z80io as z80io
 import progs.programs as prg
-import disks.debugdisk.image as ddim
-import disks.datamuseum.image as dmim
+import disks.debugdisk.image as debugdisk
+import disks.datamuseum.image as datamuseum
 from timeit import default_timer as timer
 from multiprocessing import shared_memory
 
@@ -42,8 +42,8 @@ class Emulator:
 
         self.cpu = c.Cpu(self.prgobj)
 
-        floppydisks = [dmim.dmfs, ddim.ddfs]
-        harddisks = [dmim.dmfs, ddim.ddfs]
+        floppydisks = [datamuseum.fs, debugdisk.fs]
+        harddisks = [datamuseum.fs, debugdisk.fs]
         self.io = z80io.IO(self.cpu.m, floppydisks, harddisks)
 
         self.ros = r.ROS(self.cpu.mem)

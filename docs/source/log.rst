@@ -562,7 +562,7 @@ is not included. Not sure why.
 
 PL/1 disk investigations
 
-Using q1decode from Mattis Lind, I try to reconstruct the contents of the disk
+Using **q1decode** from Mattis Lind, I try to reconstruct the contents of the disk
 based on individual track information. Track 0 has no information an thus we
 have no filenames to help us. Many files/tracks seem to have unrecoverable
 errors.
@@ -587,3 +587,17 @@ of the Q1 previously held by Mattis Lind.
 
 Added new tracks (not working yet) from Felsökningsdiskett. Restructured the
 emulator by creating the Emulator class.
+
+Contacted HomeComputerMuseum (https://www.homecomputermuseum.nl/) as they seem
+to have a Q1 or two on loan (possibly from Achim).
+
+
+2024 11 12
+----------
+
+Added more tracks (working, but many are corrupted) from Felsökningsdiskett.
+Improved Serial Impact Printer and Dot Matrix Printer IO.
+
+Got a reply from HomeComputerMuseum. They have no disks. Asked if they would
+introduce me to Bernardo (TheByteAttic) as he is otherwise difficult to get
+in touch with.

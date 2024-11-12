@@ -49,6 +49,9 @@ People
    * - Roland Langfeld
      - R.Langfeld@t-online.de
      - technikum29 computer museum
+   * - Achim Harald Baqué
+     - https://www.achimbaque.com/
+     - Owns two Q1's (gotten from Mattis Lind)
 
 
 Manuals
