@@ -21,7 +21,7 @@ emulator returned this value for both printers.
 But running the program **FMOMS** I got the following error message:
 
 .. figure:: images/noprinter.png
-  :width: 800
+  :width: 600
   :align: center
 
   Outpuut from FMOMS command
