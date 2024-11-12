@@ -31,7 +31,7 @@ from ROMs.
         q1io
         q1_io_keyboard
         disk
-        q1decode
+        filesys
 
 
     .. toctree::
