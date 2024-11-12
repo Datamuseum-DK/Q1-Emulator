@@ -30,6 +30,7 @@ from ROMs.
         roms
         q1io
         q1_io_keyboard
+        printer
         disk
         filesys
 

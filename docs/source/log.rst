@@ -587,3 +587,10 @@ of the Q1 previously held by Mattis Lind.
 
 Added new tracks (not working yet) from Felsökningsdiskett. Restructured the
 emulator by creating the Emulator class.
+
+
+2024 11 12
+----------
+
+Added more tracks (working, but many are corrupted) from Felsökningsdiskett.
+Improved Serial Impact Printer and Dot Matrix Printer IO.

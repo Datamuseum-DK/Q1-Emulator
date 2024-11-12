@@ -16,7 +16,11 @@ class IO:
         self.disk1 = disk.Control(1, fs)
         self.disk2 = disk.Control(2, fs)
         self.display = display.Display()
+
+        self.prt2bits = 0
+        self.prtdir = 0 # 0 = x, 1 = y
         self.prtbuf = "" # temporary hack for 'printer'
+
         self.m = m
         self.incb = {}
         self.outcb = {}
@@ -36,8 +40,13 @@ class IO:
         self.register_out_cb(0x04, self.handle_display_out_ctrl)
         self.register_in_cb( 0x04, self.handle_display_in)
 
+        # Serial impact printer
         self.register_in_cb( 0x05, self.handle_printer_in_5)
+        self.register_out_cb( 0x05, self.handle_printer_out_5)
+        self.register_out_cb(0x06, self.handle_printer_out_6)
         self.register_out_cb(0x07, self.handle_printer_out_7)
+
+        #
         self.register_in_cb( 0x08, self.handle_printer_in_8)
 
         # Maybe these are really disk IO ?
@@ -48,7 +57,8 @@ class IO:
         self.register_out_cb(0x0b, self.handle_disk_out_0b)
 
         # elusive IO
-        # 2024 10 10 - could this be printer (see DINDEX F5)
+        # 2024 10 10 - could this be printer (see DINDEX F5)?
+        # speculation: serial?
         self.register_in_cb( 0x0c, self.handle_unkn_in_0c)
         self.register_out_cb(0x0c, self.handle_unkn_out_0c)
 
@@ -163,24 +173,66 @@ class IO:
         print(f'IO out - key [{desc}]')
 
 
-    ### Printer 5,6,7 - Serial Impact Printer ?
+    ### Printer 5,6,7 - Serial Impact Printer
+
+    # Get printer status
+    # Bit 0 seems to need to be 1 for selected printer, even if manual does not
+    # mention this. See
+    # "Q1 ASM IO addresses usage Q1 Lite" p. 77
     def handle_printer_in_5(self) -> int:
-        self.print('IO in  - printer status -  0 (no errors)')
-        return 0
+        status = 0x01
+        self.print(f'IO in  - printer 0x5 status -  {status} (1 == selected)')
+        return status
+
+    # Print character at current position
+    def handle_printer_out_5(self, val : int):
+        print(chr(val))
+
+    # "Q1 ASM IO addresses usage Q1 Lite" p. 75
+    def handle_printer_out_6(self, val):
+        dist = (self.prt2bits << 8) + val
+        dir = 'horizontally'
+        if self.prtdir == 0: # x-dir
+            inch = dist / 60 # inches
+        else:
+            dir = 'vertically'
+            inch = dist / 48
+        self.print(f'IO out - printer ctrl 0x6 move {dir} {inch:.2f} inches.')
 
 
     def handle_printer_out_7(self, val):
-        if val == 0xA0:
-            desc = 'reset printer, raise ribbon'
+        self.prt2bits = val & 0x3
+        desc = ''
+        if val & 0x80:
+            desc += 'reset, '
+        if val & 0x40:
+            desc += 'exp res, '
+        if val & 0x20:
+            desc += 'raise ribbon, '
+        if val & 0x10:
+            desc += 'lower ribbon, '
+        if val & 0x08:
+            desc += 'paper '
+            self.prtdir = 1 # y-dir
         else:
-            desc = 'unknown command'
-        self.print(f'IO out - printer control - {desc}')
+            desc += 'carriage '
+            self.prtdir = 0 # x-dir
+        if val & 0x04:
+            desc += 'reverse '
+        else:
+            desc += 'forward '
+        desc += 'motion'
+
+        self.print(f'IO out - printer ctrl 0x7 - 0x{val:02x} [{desc}]')
 
 
-    ### Printer 8 - Dot Matrix Printer ?
+    ### Printer 8 - Dot Matrix Printer
+    # Printer needs to be selected, see
+    # From "Q1 ASM IO addresses usage Q1 Lite" p. 77
     def handle_printer_in_8(self) -> int:
-        self.print('IO in  - printer 0x8 status -  0 (no errors)')
-        return 0xF0 # error
+        status = 0x01
+        self.print(f'IO in  - printer 0x8 status -  {status} (1 == selected)')
+        return status
 
 
     ### Disk 1? Data and Control
