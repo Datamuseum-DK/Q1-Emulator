@@ -28,3 +28,35 @@ But running the program **FMOMS** I got the following error message:
 
 
 which lead me to further progress on the printer interface.
+
+
+.. list-table:: Printer status
+   :header-rows: 1
+
+   * - Bit
+     - Serial Impact Printer (0x5)
+     - Dot Matrix Printer (0x8)
+   * - 7
+     - busy
+     - busy
+   * - 6
+     - error
+     - fault
+   * - 5
+     - out of ribbon
+     - paper out
+   * - 4
+     -
+     - 0
+   * - 3
+     -
+     - 0
+   * - 2
+     -
+     - 0
+   * - 1
+     -
+     - 0
+   * - 0
+     - Printer Selected (inferred)
+     - Printer Selected

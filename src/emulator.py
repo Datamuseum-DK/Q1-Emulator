@@ -74,16 +74,16 @@ class Emulator:
         kc = self.kc
         if self.key.kbhit():
             ch = ord(self.key.getch())
-            if 32 <= ch < 127:
-                print(f'{chr(ch)}')
-            else:
-                print(f'{ch}')
+            # if 32 <= ch < 127:
+            #     print(f'{chr(ch)}')
+            # else:
+            #     print(f'{ch}')
 
             if ch == 0x222b:       # opt-b -> hexdump
                 self.cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)
             elif ch == 402: # opt-f function keys
-                k = input("fn key:\n")
-                print('key:', k)
+                k = 'F' + input("fn key:\n")
+                #print('key:', k)
                 self.int38(kc.okey(k))
             elif ch == 8224: # opt-t
                 args.decode = not args.decode

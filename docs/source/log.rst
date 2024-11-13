@@ -601,3 +601,10 @@ Improved Serial Impact Printer and Dot Matrix Printer IO.
 Got a reply from HomeComputerMuseum. They have no disks. Asked if they would
 introduce me to Bernardo (TheByteAttic) as he is otherwise difficult to get
 in touch with.
+
+
+2024 11 13
+----------
+
+Added SerialImpactPrinter class to simplify **z8io.py** which was getting messy.
+Better print buffering.

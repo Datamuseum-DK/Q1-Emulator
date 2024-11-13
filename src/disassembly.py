@@ -4,10 +4,10 @@
 
 import sys
 import argparse
-import cpu
+import devices.cpu as cpu
 import match
 import ros as r
-import programs as prg
+import progs.programs as prg
 
 
 def disassemble(args, ranges):
