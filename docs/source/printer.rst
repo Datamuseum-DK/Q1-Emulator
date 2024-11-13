@@ -55,6 +55,7 @@ which lead me to further progress on the printer interface.
      -
      - 0
    * - 1
+     -
      - 0
    * - 0
      - Printer Selected (inferred)
