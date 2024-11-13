@@ -3,6 +3,7 @@
 import sys
 import devices.disk as disk
 import devices.display as display
+import devices.printer as printer
 
 #
 
@@ -16,11 +17,9 @@ class IO:
         self.disk1 = disk.Control(1, fs)
         self.disk2 = disk.Control(2, fs)
         self.display = display.Display()
+        self.printer = printer.SerialImpactPrinter()
 
-        self.prt2bits = 0
-        self.prtbuf = "" # temporary hack for 'printer' - actually prob not printer
-        self.prtpos = [0.0, 0.0]
-        self.prtdir = [0, 0]
+        self.prtbuf = "" # temporary hack for 'printer'
 
         self.m = m
         self.incb = {}
@@ -181,62 +180,21 @@ class IO:
     # mention this. See
     # "Q1 ASM IO addresses usage Q1 Lite" p. 77
     def handle_printer_in_5(self) -> int:
-        status = 0x01
+        status = self.printer.status()
         self.print(f'IO in  - printer 0x5 status -  {status} (1 == selected)')
         return status
 
     # Print character at current position
     def handle_printer_out_5(self, val : int):
-        print(chr(val))
+        self.printer.output(val)
 
-    # "Q1 ASM IO addresses usage Q1 Lite" p. 75
+
     def handle_printer_out_6(self, val):
-        dist = (self.prt2bits << 8) + val
-        x, y = self.prtpos
-        dx, dy = self.prtdir
-
-        if dx != 0: # x-dir
-            dir = f'<->'
-            cm = 2.54 * dist / 60 # cm
-            v = cm * dx
-            x = x + v
-        if dy != 0: # y-dir
-            dir = f' I '
-            cm = 2.54 * dist / 48 # cm
-            v = cm * dy
-            y = y + v
-        self.prtpos = [x, y]
-        self.print(f'IO out - printer ctrl 0x6 move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
+        self.printer.ctrl_06(val)
 
 
     def handle_printer_out_7(self, val):
-        self.prt2bits = val & 0x3
-        desc = ''
-        if val & 0x80:
-            desc += 'reset, '
-            self.prtpos[0] = 0.0
-        if val & 0x40:
-            desc += 'exp res, '
-        if val & 0x20:
-            desc += 'raise ribbon, '
-        if val & 0x10:
-            desc += 'lower ribbon, '
-        if val & 0x08:
-            desc += 'paper '
-            self.prtdir = [0, 1]
-        else:
-            desc += 'carriage '
-            self.prtdir = [1, 0]
-        if val & 0x04:
-            self.prtdir[0] = - self.prtdir[0]
-            self.prtdir[1] = - self.prtdir[1]
-            assert self.prtdir[1] >= 0
-            desc += 'reverse '
-        else:
-            desc += 'forward '
-        desc += 'motion'
-
-        print(f'IO out - printer ctrl 0x7 - 0x{val:02x} [{desc}]')
+        self.printer.ctrl_07(val)
 
 
     ### Printer 8 - Dot Matrix Printer
@@ -282,8 +240,11 @@ class IO:
 
     # not disk, possibly printer
     def handle_unkn_in_0c(self):
-        self.print('IO in  - unknown in for 0xc - (return 0x00)')
-        return 0x00
+        # status 0x80 - program stuck in start up
+        # status 0x40 - DINDEX stuck in F5
+        status = 0x00
+        self.print(f'IO in  - unknown in for 0xc - (return {status})')
+        return status
 
 
     def handle_unkn_out_0c(self, val):
