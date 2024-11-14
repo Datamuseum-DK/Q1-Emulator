@@ -608,3 +608,17 @@ in touch with.
 
 Added SerialImpactPrinter class to simplify **z8io.py** which was getting messy.
 Better print buffering.
+
+
+2024 11 14
+----------
+
+Added WRITE support and support for multiple disks (merged from other branch).
+Using the program **ALTER**, files can now be renamed. Looks like they can also
+be write protected. But write protect does apparently not prevent renaming.
+
+.. figure:: images/alter_rename.png
+  :width: 400
+  :align: center
+
+  Files SCR, DINDEX and FRENKB renamed to XXX, XXXXXX, XXXXXB using 'ALTER' program
