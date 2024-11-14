@@ -43,6 +43,7 @@ class SerialImpactPrinter:
         #print(f'SI printer ctrl: move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
 
 
+
     def ctrl_07(self, value: int):
         self.poshi2 = value & 0x3
         desc = ''
@@ -64,7 +65,7 @@ class SerialImpactPrinter:
         if value & 0x04:
             self.dir[0] = - self.dir[0]
             self.dir[1] = - self.dir[1]
-            assert self.dir[1] >= 0
+            #assert self.dir[1] >= 0, self.dir[1] # fails for PTEST program
             desc += 'reverse '
         else:
             desc += 'forward '

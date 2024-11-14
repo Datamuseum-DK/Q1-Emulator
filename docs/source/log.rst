@@ -622,3 +622,11 @@ be write protected. But write protect does apparently not prevent renaming.
   :align: center
 
   Files SCR, DINDEX and FRENKB renamed to XXX, XXXXXX, XXXXXB using 'ALTER' program
+
+Changes to disks, such as renaming and write protection is **not written to disk** so
+it is safe to experiment.
+
+The emulated system now comes preloaded with two floppy images: datamuseum and
+debugdisk. The first has good integrity the second has a lot of bad tracks so
+most programs will fail to load and execute. Some good files are: SCR, ALTER,
+DISPTEST, PTEST, COPY
