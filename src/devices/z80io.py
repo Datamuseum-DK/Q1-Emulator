@@ -222,6 +222,7 @@ class IO:
 
     def handle_disk_out_09(self, val):
         self.print(f'IO out - floppy (data) - (0x{val:02x})')
+        self.floppy.data_out(val)
 
 
     def handle_disk_in_0a(self):

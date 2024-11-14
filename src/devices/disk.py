@@ -1,4 +1,5 @@
 import sys
+import utils.misc as misc
 
 # System can have multple Disks (Floppy, Harddisks)
 # Disks can have multiple Drives (0, 1, ...)
@@ -10,6 +11,7 @@ class Disk:
         self.selected_drive = -1
         self.numdrives = len(drives)
         self.drives = []
+        self.write_ena = False
         for i, fs in enumerate(drives):
             self.drives.append(Drive(i, fs))
 
@@ -43,13 +45,13 @@ class Disk:
         assert self.selected_drive in [1, 2, 3, 4, 5, 6, 7]
 
 
+    # bad name, also used in Drive
     def readbyte(self):
         return self.drive.readbyte()
 
-
-    def write(self, byte):
-        print('write not supported')
-        sys.exit()
+    # bad name, also used in Drive
+    def writebyte(self, byte):
+        self.drive.writebyte(byte)
 
 
     def step(self, stepdir):
@@ -93,6 +95,10 @@ class Drive:
         self.current_byte = 0
 
 
+    def dump(self, track):
+        misc.hexdump(self.data[track], 32, 511)
+
+
     def istrack0(self):
         return self.current_track == 0
 
@@ -124,6 +130,17 @@ class Drive:
         assert 0 <= byte < self.bytes_per_track, byte
         self.current_byte = (self.current_byte + 1) % self.bytes_per_track
         return self.data[track][byte]
+
+
+    def writebyte(self, value):
+        track = self.current_track
+        byte = self.current_byte - 3 # TODO don't understand this offset
+        d = self.data[track][byte]
+
+        assert 0 <= track < self.tracks
+        assert 0 <= byte < self.bytes_per_track, byte
+        self.data[track][byte] = value
+        self.current_byte = (self.current_byte + 1) % self.bytes_per_track
 
 
     def gettrackno(self):
@@ -166,6 +183,10 @@ class Control:
         return val
 
 
+    def data_out(self, value):
+        self.disk.writebyte(value)
+
+
     def control1(self, val):
         drive = val & 0x7f
         side = val >> 7
@@ -189,7 +210,9 @@ class Control:
         if val & 0x20: # Step
             self.disk.step(stepdir)
         if val & 0x80:
-            self.disk.write()
+            self.disk.write_ena = True
+        else:
+            self.disk.write_ena = False
 
 
     def status(self):

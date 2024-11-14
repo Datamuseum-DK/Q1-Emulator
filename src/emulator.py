@@ -74,7 +74,7 @@ class Emulator:
         kc = self.kc
         if self.key.kbhit():
             ch = ord(self.key.getch())
-            # if 32 <= ch < 127:
+            # if misc.isprintable(ch):
             #     print(f'{chr(ch)}')
             # else:
             #     print(f'{ch}')
@@ -87,10 +87,11 @@ class Emulator:
                 self.int38(kc.okey(k))
             elif ch == 8224: # opt-t
                 args.decode = not args.decode
-            elif ch == 170: # opt-a FDs
-                self.ros.index()
-                self.ros.file()
-                self.ros.disk()
+            elif ch == 170: # opt-a misc debug FDs, floppy dump
+                self.io.floppy.disk.drives[1].dump(0)
+                # self.ros.index()
+                # self.ros.file()
+                # self.ros.disk()
             # Q1 Keyboard input below
             elif ch == kc.ikey("HEX"):
                 self.int38(kc.okey("HEX"))

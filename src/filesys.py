@@ -107,7 +107,9 @@ class FileSys:
         i = len(data)
         d[offset + i + 0] = cksum
         d[offset + i + 1] = 0x10
-        return offset + i + 2
+        d[offset + i + 2] = 0x00 # needed by write
+        d[offset + i + 3] = 0x00 # needed by write
+        return offset + i + 4
 
 
     #
