@@ -631,6 +631,7 @@ debugdisk. The first has good integrity the second has a lot of bad tracks so
 most programs will fail to load and execute. Some good files are: SCR, ALTER,
 DISPTEST, PTEST, COPY
 
+
 2024 11 13
 ----------
 
@@ -645,8 +646,8 @@ and the other windows for device-specific inspection.
 
   Separate logging for io, printer and disk
 
-  ... and used it to fix the crashing bug. Now multiple fplooy images
-  are supported and we can test the **COPY** utility:
+  ... and used it to fix the crashing bug. Now multiple floppy drives
+  are supported (1 to 7) and we can test the **COPY** utility:
 
   .. figure:: images/alter_copy_wp.png
     :width: 400
