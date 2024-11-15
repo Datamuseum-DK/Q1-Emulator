@@ -637,3 +637,10 @@ DISPTEST, PTEST, COPY
 Added support for UDP based logging via the class **utils/UdpTx**. Added scripts
 to start logging in **utils**. Now the emulator console can be used for debugging
 and the other windows for device-specific inspection.
+
+
+.. figure:: images/udplogging.png
+  :width: 1024
+  :align: center
+
+  Separate logging for io, printer and disk
