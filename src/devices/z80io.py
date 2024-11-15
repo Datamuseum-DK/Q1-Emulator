@@ -18,7 +18,7 @@ def isprintable(c):
 class IO:
     def __init__(self, m, floppys, hds):
         self.floppy = disk.Control('floppy', floppys)
-        self.hdd = disk.Control('hdd', hds)
+        #self.hdd = disk.Control('hdd', hds)
         self.display = display.Display()
         self.printer = printer.SerialImpactPrinter()
 
@@ -27,7 +27,6 @@ class IO:
         self.m = m
         self.incb = {}
         self.outcb = {}
-        self.keyincount = 0
         self.keyin = 0
         self.go = 0
         self.stop = 0
@@ -44,7 +43,7 @@ class IO:
 
         # Serial impact printer
         self.register_in_cb( 0x05, self.handle_printer_in_5)
-        self.register_out_cb( 0x05, self.handle_printer_out_5)
+        self.register_out_cb(0x05, self.handle_printer_out_5)
         self.register_out_cb(0x06, self.handle_printer_out_6)
         self.register_out_cb(0x07, self.handle_printer_out_7)
 
@@ -85,7 +84,8 @@ class IO:
         if inaddr in self.incb:
             return self.incb[inaddr]()
 
-        udptx.send(f'0x{inaddr:02x} - unregistered input address at pc {self.m.pc:04x}, exiting')
+        msg = f'0x{inaddr:02x} - unregistered input address at pc {self.m.pc:04x}, exiting'
+        udptx.send(msg)
         print(msg)
         print()
         sys.exit()
@@ -149,7 +149,8 @@ class IO:
         if self.stop:
             retval = 0x0f
             self.stop = 0
-        udptx.send(f'0x01 in  - key: 0x{retval:02x}')
+        if retval:
+            udptx.send(f'0x01 in  - key: 0x{retval:02x}')
         return retval
 
 
@@ -226,16 +227,18 @@ class IO:
 
 
     def handle_disk_out_09(self, val):
-        udptx.send(f'0x09 out - floppy (data) - (0x{val:02x})')
+        #udptx.send(f'0x09 out - floppy (data) - (0x{val:02x})')
         self.floppy.data_out(val)
 
 
     def handle_disk_in_0a(self):
         retval = self.floppy.status()
+        #udptx.send(f'0x0a in  - floppy status - (0x{retval:02x})')
         return retval
 
     def handle_disk_in_09(self):
         retval = self.floppy.data_in()
+        #udptx.send(f'0x09 in - floppy (data) - (0x{retval:02x})')
         return retval
 
 
@@ -260,23 +263,28 @@ class IO:
     ### Disk 2 Data and Control
     ### From "Q1 Assembler" p. 52 - 54
     def handle_disk_in_19(self):
-        retval = self.hdd.data_in()
-        udptx.send(f'0x19 in  - hdd (data): {retval}')
-        return retval
+        # retval = self.hdd.data_in()
+        # udptx.send(f'0x19 in  - hdd (data): {retval}')
+        # return retval
+        return 0
+
 
     def handle_disk_in_1a(self):
-        retval = self.hdd.status()
-        udptx.send(f'0x1a in  - hdd (status): {retval}')
-        return retval
+        # retval = self.hdd.status()
+        # udptx.send(f'0x1a in  - hdd (status): {retval}')
+        # return retval
+        return 0
 
 
     def handle_disk_out_1a(self, val):
-        if val:
-            udptx.send(f'0x1a out - hdd (control 1 ) - (0x{val:02x})')
-        self.hdd.control1(val)
+        # if val:
+        #     udptx.send(f'0x1a out - hdd (control 1 ) - (0x{val:02x})')
+        # self.hdd.control1(val)
+        pass
 
 
     def handle_disk_out_1b(self, val):
-        if val != 0:
-            udptx.send(f'0x1b out - hdd (control 2 ) - (0x{val:02x})')
-        self.hdd.control2(val)
+        # if val != 0:
+        #     udptx.send(f'0x1b out - hdd (control 2 ) - (0x{val:02x})')
+        # self.hdd.control2(val)
+        pass

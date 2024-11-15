@@ -8,6 +8,7 @@ import match
 import ros as r
 import devices.z80io as z80io
 import progs.programs as prg
+import utils.misc as misc
 import disks.debugdisk.image as debugdisk
 import disks.datamuseum.image as datamuseum
 from timeit import default_timer as timer
@@ -74,10 +75,10 @@ class Emulator:
         kc = self.kc
         if self.key.kbhit():
             ch = ord(self.key.getch())
-            # if misc.isprintable(ch):
-            #     print(f'{chr(ch)}')
-            # else:
-            #     print(f'{ch}')
+            if misc.isprintable(ch):
+                print(f'{chr(ch)}')
+            else:
+                print(f'{ch}')
 
             if ch == 0x222b:       # opt-b -> hexdump
                 self.cpu.mem.hexdump(0x2000, 0x10000 - 0x2000)

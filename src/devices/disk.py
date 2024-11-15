@@ -14,22 +14,16 @@ class Disk:
         self.selected_drive = -1
         self.numdrives = len(drives)
         self.drives = []
-        self.write_ena = False
         for i, fs in enumerate(drives):
+            udptx.send(f'append {self.type} Drive({i})')
             self.drives.append(Drive(i, fs))
-
-
-    def isdriveavailable(self):
-        return 0 < self.selected_drive <= self.numdrives
+        for i in range(self.numdrives, 8):
+            udptx.send(f'append (unavailable) {self.type} Drive({i})')
+            self.drives.append(Drive(i, drives[0], avail=False))
 
 
     def getdrive(self):
         return self.selected_drive
-
-
-    def deselect_drive(self):
-        self.selected_drive = -1
-        self.drive = ""
 
 
     def select_drive(self, i):
@@ -39,12 +33,9 @@ class Disk:
             return
 
         self.selected_drive = drive # allow selection of unavailable drives
-        if drive <= len(self.drives):
-            udptx.send(f'select_drive: {self.type}/{drive} - available')
-            self.drive = self.drives[drive - 1]
-        else:
-            udptx.send(f'select_drive: {self.type}/{drive} - unavailable')
-            self.drive = 'unavailable'
+        self.drive = self.drives[drive - 1]
+        udptx.send(f'Disk.select_drive() - {self.type}/{drive}, active: {self.drive.avail}')
+
         assert self.selected_drive in [1, 2, 3, 4, 5, 6, 7]
 
 
@@ -79,16 +70,16 @@ class Disk:
 
     def status(self) -> int:
         if self.type != 'floppy':
-            udptx.send(f'disk.status: {self.type} drive not available')
+            udptx.send(f'Disk.status: {self.type} drive not available')
             return 0
-        if not self.isdriveavailable():
-            udptx.send(f'status: drive {self.selected_drive} not valid')
+        if not self.drive.avail:
+            udptx.send(f'Disk.status: drive {self.selected_drive} not valid')
             return 0
         return self.drive.status()
 
 
 class Drive:
-    def __init__(self, driveno, fs): #
+    def __init__(self, driveno, fs, avail=True): #
         self.udp = udp.UdpTx(port=5006)
         self.driveno = driveno
         self.tracks = fs.tracks
@@ -97,6 +88,7 @@ class Drive:
         self.marks = fs.marks
         self.current_track = 0
         self.current_byte = 0
+        self.avail = avail
 
 
     def dump(self, track):
@@ -130,6 +122,7 @@ class Drive:
     def readbyte(self):
         track = self.current_track
         byte = self.current_byte
+        #udptx.send(f'Drive.readbyte() - driveno {self.driveno}, trk {track}, byte {byte}')
         assert 0 <= track < self.tracks
         assert 0 <= byte < self.bytes_per_track, byte
         self.current_byte = (self.current_byte + 1) % self.bytes_per_track
@@ -158,6 +151,9 @@ class Drive:
 
 
     def status(self):
+        if not self.avail:
+            udptx.send(f'this disk {self.driveno} is unavailable (status 0)')
+            return 0
         status = statusbits["sdready"]
         if self.isindex():
             status += statusbits["index"]
@@ -194,7 +190,6 @@ class Control:
         drive = val & 0x7f
         side = val >> 7
         if drive == 0:
-            self.disk.deselect_drive()
             return
 
         assert drive in [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40], f'val: 0x{drive:02x}'
@@ -205,6 +200,7 @@ class Control:
             drive /= 2
             i += 1
         assert i in [1, 2, 3, 4, 5, 6, 7]
+        udptx.send(f'Control.control1(): drive selected: {i}')
         self.disk.select_drive(i)
 
 

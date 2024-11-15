@@ -644,3 +644,13 @@ and the other windows for device-specific inspection.
   :align: center
 
   Separate logging for io, printer and disk
+
+  ... and used it to fix the crashing bug. Now multiple fplooy images
+  are supported and we can test the **COPY** utility:
+
+  .. figure:: images/alter_copy_wp.png
+    :width: 400
+    :align: center
+
+    Using **ALTER** to write protect **SCR**, then failing attempt to **COPY** **DINDEX**
+    from drive 1 to **SCR** on drive 2 due to protection.
