@@ -4,8 +4,11 @@ import sys
 import devices.disk as disk
 import devices.display as display
 import devices.printer as printer
+import utils.udptx as udp
 
 #
+
+udptx = udp.UdpTx(port=5007, timestamp=True, nl=True)
 
 def isprintable(c):
     """True if character is printable ASCII"""
@@ -29,7 +32,6 @@ class IO:
         self.go = 0
         self.stop = 0
         self.timeout = False
-        self.verbose = False
         self.register_in_cb( 0x00, self.handle_rtc_in)
         self.register_out_cb(0x00, self.handle_rtc_out)
 
@@ -69,10 +71,6 @@ class IO:
         self.register_out_cb(0x1b, self.handle_disk_out_1b)
 
 
-    def print(self, s):
-        if self.verbose:
-            print(s)
-
     ### Functions for registering and handling IO
 
     def register_out_cb(self, outaddr: int, outfunc):
@@ -87,7 +85,8 @@ class IO:
         if inaddr in self.incb:
             return self.incb[inaddr]()
 
-        print(f'IO - unregistered input address 0x{inaddr:02x} at pc {self.m.pc:04x}, exiting')
+        udptx.send(f'0x{inaddr:02x} - unregistered input address at pc {self.m.pc:04x}, exiting')
+        print(msg)
         print()
         sys.exit()
         return 0
@@ -98,7 +97,9 @@ class IO:
         if outaddr in self.outcb:
             self.outcb[outaddr](outval)
         else:
-            print(f'IO - unregistered output address 0x{outaddr:02x} (0x{outval:02x})')
+            msg = f'0x{outaddr:02x} - unregistered output address, value (0x{outval:02x})'
+            udptx.send(msg)
+            print(msg)
             sys.exit()
 
 
@@ -112,13 +113,13 @@ class IO:
         return 0
 
     def handle_rtc_out(self, val):
-        print(f"setting timeout value {val} not supported")
+        udptx.send(f"0x00 out - rtc: setting timeout value {val} not supported")
 
 
     ### Display
 
     def handle_display_in(self) -> int:
-        self.print('IO - display status: 32 + 16 (Lite, 40 char)')
+        udptx.send('0x04 in  - display status: 32 + 16 (Lite, 40 char)')
         return 32 + 16
 
 
@@ -135,7 +136,7 @@ class IO:
             desc = 'advance right (or new line)'
         else:
             desc = f'0x{val:02}'
-        self.print(f"IO out - display control - {desc}")
+        #udptx.send(f"IO out - display control - {desc}")
 
 
     ### Keyboard
@@ -148,7 +149,7 @@ class IO:
         if self.stop:
             retval = 0x0f
             self.stop = 0
-        self.print(f'IO in  - key : 0x{retval:02x}')
+        udptx.send(f'0x01 in  - key: 0x{retval:02x}')
         return retval
 
 
@@ -170,7 +171,7 @@ class IO:
             desc += 'K3 '
         if val & 0x80:
             desc += 'INS '
-        print(f'IO out - key [{desc}]')
+        udptx.send(f'0x01 out - key: [{desc}]')
 
 
     ### Printer 5,6,7 - Serial Impact Printer
@@ -181,19 +182,23 @@ class IO:
     # "Q1 ASM IO addresses usage Q1 Lite" p. 77
     def handle_printer_in_5(self) -> int:
         status = self.printer.status()
-        self.print(f'IO in  - printer 0x5 status -  {status} (1 == selected)')
+        udptx.send(f'0x05 in  - printer status -  {status} (1 == selected)')
         return status
+
 
     # Print character at current position
     def handle_printer_out_5(self, val : int):
+        udptx.send(f'0x05 out - printer output - {val}')
         self.printer.output(val)
 
 
     def handle_printer_out_6(self, val):
+        udptx.send(f'0x06 out - printer ctrl 1   - {val}')
         self.printer.ctrl_06(val)
 
 
     def handle_printer_out_7(self, val):
+        udptx.send(f'0x07 out - printer ctrl 2   - {val}')
         self.printer.ctrl_07(val)
 
 
@@ -202,7 +207,7 @@ class IO:
     # From "Q1 ASM IO addresses usage Q1 Lite" p. 77
     def handle_printer_in_8(self) -> int:
         status = 0x01
-        self.print(f'IO in  - printer 0x8 status -  {status} (1 == selected)')
+        udptx.send(f'0x08 in  - printer status -  {status} (1 == selected)')
         return status
 
 
@@ -210,18 +215,18 @@ class IO:
     ### From "Q1 ASM IO addresses usage Q1 Lite" p. 77 - 80
     def handle_disk_out_0a(self, val):
         if val:
-            self.print(f'IO out - floppy (control 1 ) - (0x{val:02x})')
+            udptx.send(f'0x0a out - floppy (control 1 ) - (0x{val:02x})')
         self.floppy.control1(val)
 
 
     def handle_disk_out_0b(self, val):
         if val:
-            self.print(f'IO out - floppy (control 2 ) - (0x{val:02x})')
+            udptx.send(f'0x0b out - floppy (control 2 ) - (0x{val:02x})')
         self.floppy.control2(val)
 
 
     def handle_disk_out_09(self, val):
-        self.print(f'IO out - floppy (data) - (0x{val:02x})')
+        udptx.send(f'0x09 out - floppy (data) - (0x{val:02x})')
         self.floppy.data_out(val)
 
 
@@ -239,44 +244,39 @@ class IO:
         # status 0x80 - program stuck in start up
         # status 0x40 - DINDEX stuck in F5
         status = 0x00
-        self.print(f'IO in  - unknown in for 0xc - (return {status})')
+        udptx.send(f'0x0c in  - unknown in for 0xc - (return {status})')
         return status
 
 
     def handle_unkn_out_0c(self, val):
+        udptx.send(f'0x0c out - unknown device - (0x{val:02x})')
         if val == 0xa:
             print(self.prtbuf)
             self.prtbuf=""
         else:
             self.prtbuf += chr(val)
 
-        #print(f'{chr(val)}')
-
-
-    def handle_disk_out_0c(self, val):
-        print(f'IO out - unknown device - (0x{val:02x})')
-
 
     ### Disk 2 Data and Control
     ### From "Q1 Assembler" p. 52 - 54
     def handle_disk_in_19(self):
         retval = self.hdd.data_in()
-        self.print(f'IO in  - hdd (data): {retval}')
+        udptx.send(f'0x19 in  - hdd (data): {retval}')
         return retval
 
     def handle_disk_in_1a(self):
         retval = self.hdd.status()
-        self.print(f'IO in  - hdd (status): {retval}')
+        udptx.send(f'0x1a in  - hdd (status): {retval}')
         return retval
 
 
     def handle_disk_out_1a(self, val):
         if val:
-            self.print(f'IO out - hdd (control 1 ) - (0x{val:02x})')
+            udptx.send(f'0x1a out - hdd (control 1 ) - (0x{val:02x})')
         self.hdd.control1(val)
 
 
     def handle_disk_out_1b(self, val):
         if val != 0:
-            self.print(f'IO out - hdd (control 2 ) - (0x{val:02x})')
+            udptx.send(f'0x1b out - hdd (control 2 ) - (0x{val:02x})')
         self.hdd.control2(val)

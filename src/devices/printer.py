@@ -1,5 +1,8 @@
 
+import utils.udptx as udp
 
+
+udptx = udp.UdpTx(port=5008, timestamp=True, nl=True)
 
 # "Q1 ASM IO addresses usage Q1 Lite" p. 75 - 77
 class SerialImpactPrinter:
@@ -40,7 +43,7 @@ class SerialImpactPrinter:
             v = cm * dy
             y = y + v
         self.pos = [x, y]
-        #print(f'SI printer ctrl: move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
+        udptx.send(f'SI printer ctrl 06: move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
 
 
 
@@ -71,4 +74,4 @@ class SerialImpactPrinter:
             desc += 'forward '
         desc += 'motion'
 
-        #print(f'SI printer ctrl: - 0x{value:02x} [{desc}]')
+        udptx.send(f'SI printer ctrl 07: {value:02x}: [{desc}]')

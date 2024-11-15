@@ -1,16 +1,8 @@
-import socket
+import utils.udptx as udp
 
 '''
     Display emulator for Q1
 '''
-
-
-def txudp(message):
-    UDP_IP = "127.0.0.1"
-    UDP_PORT = 5005
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(message.encode(), (UDP_IP, UDP_PORT))
 
 
 class Display:
@@ -20,6 +12,8 @@ class Display:
         self.h = height
         self.pos = (0,0)
         self.buffer = [[chr(0x20) for x in range(width)] for y in range(height)]
+
+        self.udp = udp.UdpTx(port=5005)
 
 
     def _incx(self):
@@ -57,7 +51,7 @@ class Display:
         msg = chr(self.pos[0]) + chr(self.pos[1])
         for l in self.buffer:
             msg += ''.join(l)
-        txudp(msg)
+        self.udp.send(msg)
 
 if __name__ == '__main__':
     import time

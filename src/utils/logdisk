@@ -1,0 +1,4 @@
+printf "\e]1337;SetBadgeFormat=%s\a" \
+  $(echo "Q1 Disk" | base64)
+
+nc -kluvw 0 127.0.0.1 5006

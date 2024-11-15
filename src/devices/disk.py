@@ -1,12 +1,15 @@
 import sys
 import utils.misc as misc
+import utils.udptx as udp
 
 # System can have multple Disks (Floppy, Harddisks)
 # Disks can have multiple Drives (0, 1, ...)
 
+udptx = udp.UdpTx(port=5006, timestamp=True, nl=True)
+
 class Disk:
     def __init__(self, type, drives):
-        print(f'disk {type} has {len(drives)} drives')
+        udptx.send(f'disk {type} has {len(drives)} drives')
         self.type = type
         self.selected_drive = -1
         self.numdrives = len(drives)
@@ -37,10 +40,10 @@ class Disk:
 
         self.selected_drive = drive # allow selection of unavailable drives
         if drive <= len(self.drives):
-            print(f'select_drive: {self.type}/{drive} - available')
+            udptx.send(f'select_drive: {self.type}/{drive} - available')
             self.drive = self.drives[drive - 1]
         else:
-            print(f'select_drive: {self.type}/{drive} - unavailable')
+            udptx.send(f'select_drive: {self.type}/{drive} - unavailable')
             self.drive = 'unavailable'
         assert self.selected_drive in [1, 2, 3, 4, 5, 6, 7]
 
@@ -76,16 +79,17 @@ class Disk:
 
     def status(self) -> int:
         if self.type != 'floppy':
-            print(f'disk.status: {self.type} drive not available')
+            udptx.send(f'disk.status: {self.type} drive not available')
             return 0
         if not self.isdriveavailable():
-            print(f'status: drive {self.selected_drive} not valid')
+            udptx.send(f'status: drive {self.selected_drive} not valid')
             return 0
         return self.drive.status()
 
 
 class Drive:
     def __init__(self, driveno, fs): #
+        self.udp = udp.UdpTx(port=5006)
         self.driveno = driveno
         self.tracks = fs.tracks
         self.bytes_per_track = fs.bpt
@@ -112,12 +116,12 @@ class Drive:
         if direction: # UP
             msg = f'disk {self.driveno}, step up 0x{direction:02x}'
             msg += f', track {self.current_track} -> {self.current_track + 1}'
-            print(msg)
+            udptx.send(msg)
             self.current_track = (self.current_track + 1) % self.tracks
         else: # DOWN
             msg = f'disk {self.driveno}, step down {direction:02x}'
             msg += f', track {self.current_track} -> {self.current_track - 1}'
-            print(msg)
+            udptx.send(msg)
             if self.current_track == 0:
                 return
             self.current_track -= 1
@@ -150,7 +154,6 @@ class Drive:
     def isbusy(self):
         while self.current_byte not in self.marks[self.current_track]:
             self.current_byte = (self.current_byte + 1) % self.bytes_per_track
-        #print(f'mark {self.current_byte}')
         return True
 
 

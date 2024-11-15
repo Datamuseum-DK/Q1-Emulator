@@ -630,3 +630,10 @@ The emulated system now comes preloaded with two floppy images: datamuseum and
 debugdisk. The first has good integrity the second has a lot of bad tracks so
 most programs will fail to load and execute. Some good files are: SCR, ALTER,
 DISPTEST, PTEST, COPY
+
+2024 11 13
+----------
+
+Added support for UDP based logging via the class **utils/UdpTx**. Added scripts
+to start logging in **utils**. Now the emulator console can be used for debugging
+and the other windows for device-specific inspection.
