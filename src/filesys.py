@@ -130,12 +130,8 @@ class Track:
             self.program(track, data, records, record_size)
             return
 
-        if record_size == 20:
-            self.rawdata(track, data, records, record_size)
-            return
-
-        print('unsupported record type')
-
+        # all other record types are presumed custom
+        self.rawdata(track, data, records, record_size)
 
 
 
