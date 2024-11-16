@@ -16,7 +16,7 @@ q1 floppy
 
 Digitised by datamuseum.dk.
 
-.. figure:: images/datamuseumdisk.png
+.. figure:: ../images/datamuseumdisk.png
   :width: 400
   :align: center
 
@@ -94,7 +94,7 @@ Felsökningsdiskett
 
 Digitised by Mattis Lind?.
 
-.. figure:: images/dbgdisk.png
+.. figure:: ../images/dbgdisk.png
   :width: 400
   :align: center
 
