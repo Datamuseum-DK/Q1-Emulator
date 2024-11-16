@@ -31,39 +31,31 @@ class IO:
         self.go = 0
         self.stop = 0
         self.timeout = False
+
         self.register_in_cb( 0x00, self.handle_rtc_in)
         self.register_out_cb(0x00, self.handle_rtc_out)
-
         self.register_in_cb( 0x01, self.handle_key_in)
         self.register_out_cb(0x01, self.handle_key_out)
-
         self.register_out_cb(0x03, self.handle_display_out)
         self.register_out_cb(0x04, self.handle_display_out_ctrl)
         self.register_in_cb( 0x04, self.handle_display_in)
-
         # Serial impact printer
         self.register_in_cb( 0x05, self.handle_printer_in_5)
         self.register_out_cb(0x05, self.handle_printer_out_5)
         self.register_out_cb(0x06, self.handle_printer_out_6)
         self.register_out_cb(0x07, self.handle_printer_out_7)
-
-        #
+        # Dot Matrix Printer
         self.register_in_cb( 0x08, self.handle_printer_in_8)
-
-        # Floppy disk ?
+        # Floppy disk - 8" ?
         self.register_in_cb( 0x09, self.handle_disk_in_09)
-        self.register_in_cb( 0x0a, self.handle_disk_in_0a)
         self.register_out_cb(0x09, self.handle_disk_out_09)
+        self.register_in_cb( 0x0a, self.handle_disk_in_0a)
         self.register_out_cb(0x0a, self.handle_disk_out_0a)
         self.register_out_cb(0x0b, self.handle_disk_out_0b)
-
-        # elusive IO
-        # 2024 10 10 - could this be printer (see DINDEX F5)?
-        # speculation: serial?
+        # Unknown IO - could this be printer (see DINDEX F5)?
         self.register_in_cb( 0x0c, self.handle_unkn_in_0c)
         self.register_out_cb(0x0c, self.handle_unkn_out_0c)
-
-        # Hard disk ?
+        # Floppy Disk - 5.25" ?
         self.register_in_cb( 0x19, self.handle_disk_in_19)
         self.register_in_cb( 0x1a, self.handle_disk_in_1a)
         self.register_out_cb(0x1a, self.handle_disk_out_1a)
@@ -103,7 +95,7 @@ class IO:
             sys.exit()
 
 
-    ### Specific functions
+    ### IO Handling functions
 
     ### Real Time Clock (RTC)
     def handle_rtc_in(self) -> int:
@@ -114,29 +106,6 @@ class IO:
 
     def handle_rtc_out(self, val):
         udptx.send(f"0x00 out - rtc: setting timeout value {val} not supported")
-
-
-    ### Display
-
-    def handle_display_in(self) -> int:
-        udptx.send('0x04 in  - display status: 32 + 16 (Lite, 40 char)')
-        return 32 + 16
-
-
-    def handle_display_out(self, val):
-        self.display.data(chr(val))
-        self.display.update()
-
-
-    def handle_display_out_ctrl(self, val) -> str:
-        self.display.control(val)
-        if val == 0x05:
-            desc = 'unblank, reset to (1,1)'
-        elif val == 0x08:
-            desc = 'advance right (or new line)'
-        else:
-            desc = f'0x{val:02}'
-        #udptx.send(f"IO out - display control - {desc}")
 
 
     ### Keyboard
@@ -173,6 +142,31 @@ class IO:
         if val & 0x80:
             desc += 'INS '
         udptx.send(f'0x01 out - key: [{desc}]')
+
+
+    ### Display
+
+    def handle_display_out(self, val):
+        # if val not in [0x00, 0x20]:
+        #     udptx.send(f'0x03 out - display out: 0x{val:02x}, {chr(val)}')
+        self.display.data(chr(val))
+        self.display.update()
+
+
+    def handle_display_in(self) -> int:
+        udptx.send('0x04 in  - display status: 32 + 16 (Lite, 40 char)')
+        return 32 + 16
+
+
+    def handle_display_out_ctrl(self, val) -> str:
+        self.display.control(val)
+        if val == 0x05:
+            desc = 'unblank, reset to (1,1)'
+        elif val == 0x08:
+            desc = 'advance right (or new line)'
+        else:
+            desc = f'0x{val:02}'
+        #udptx.send(f"0x05 out - display control - {desc}")
 
 
     ### Printer 5,6,7 - Serial Impact Printer
@@ -214,16 +208,10 @@ class IO:
 
     ### Disk 1? Data and Control
     ### From "Q1 ASM IO addresses usage Q1 Lite" p. 77 - 80
-    def handle_disk_out_0a(self, val):
-        if val:
-            udptx.send(f'0x0a out - floppy (control 1 ) - (0x{val:02x})')
-        self.floppy.control1(val)
-
-
-    def handle_disk_out_0b(self, val):
-        if val:
-            udptx.send(f'0x0b out - floppy (control 2 ) - (0x{val:02x})')
-        self.floppy.control2(val)
+    def handle_disk_in_09(self):
+        retval = self.floppy.data_in()
+        #udptx.send(f'0x09 in - floppy (data) - (0x{retval:02x})')
+        return retval
 
 
     def handle_disk_out_09(self, val):
@@ -231,15 +219,23 @@ class IO:
         self.floppy.data_out(val)
 
 
+    def handle_disk_out_0a(self, val):
+        if val:
+            udptx.send(f'0x0a out - floppy (control 1 ) - (0x{val:02x})')
+        self.floppy.control1(val)
+
+
     def handle_disk_in_0a(self):
         retval = self.floppy.status()
         #udptx.send(f'0x0a in  - floppy status - (0x{retval:02x})')
         return retval
 
-    def handle_disk_in_09(self):
-        retval = self.floppy.data_in()
-        #udptx.send(f'0x09 in - floppy (data) - (0x{retval:02x})')
-        return retval
+
+    def handle_disk_out_0b(self, val):
+        if val:
+            udptx.send(f'0x0b out - floppy (control 2 ) - (0x{val:02x})')
+        self.floppy.control2(val)
+
 
 
     # not disk, possibly printer

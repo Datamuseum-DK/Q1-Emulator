@@ -11,6 +11,7 @@ import progs.programs as prg
 import utils.misc as misc
 import disks.debugdisk.image as debugdisk
 import disks.datamuseum.image as datamuseum
+import disks.fluxsamples.image as fluxsamples
 from timeit import default_timer as timer
 from multiprocessing import shared_memory
 
@@ -36,6 +37,7 @@ class Emulator:
         self.shm.close()
         self.shm.unlink()
 
+
     def __init__(self, args):
         self.args = args
         self.prgobj = prg.proglist[args.program]
@@ -43,14 +45,14 @@ class Emulator:
 
         self.cpu = c.Cpu(self.prgobj)
 
-        floppydisks = [datamuseum.fs, debugdisk.fs]
+        floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs]
         harddisks = [datamuseum.fs, debugdisk.fs]
         self.io = z80io.IO(self.cpu.m, floppydisks, harddisks)
 
         self.ros = r.ROS(self.cpu.mem)
         self.key = kbd.Key()
         self.kc = kbd.KeyboardCodes()
-        #io.verbose = True
+
         self.cpu.reset()
         self.cpu.m.set_write_callback(self.on_write)
         self.cpu.m.set_input_callback(self.io.handle_io_in)
