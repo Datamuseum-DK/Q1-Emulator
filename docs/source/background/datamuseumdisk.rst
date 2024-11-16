@@ -13,7 +13,7 @@ Digitised by datamuseum.dk.
 
 Besides general functions, the disk also contains programs for accounting.
 These are described below. Most of the accounting files require an unknown
-program called **F1**. 
+program called **F1**.
 
 .. list-table:: Utility files and programs
    :header-rows: 1
@@ -52,45 +52,45 @@ program called **F1**.
      - unknown (missing a program disk)
 
 
- .. list-table:: Accounting related programs
-    :header-rows: 1
+.. list-table:: Accounting related programs
+   :header-rows: 1
 
-    * - Filename
-      - Type
-      - Date
-      - Function
-    * - JDC
-      - application
-      - V01.11.82
-      - unknown (missing a program disk)
-    * - FARK
-      - application
-      -
-      - Kontoark (inferred by name)
-    * - FUDTOG
-      - application
-      -
-      - Kontoudtog (inferred by name)
-    * - FMOMS
-      - application
-      -
-      - MOMS regnskab (inferred by name)
-    * - FRAPP
-      - application
-      -
-      - Rapport (inferred by name)
-    * - FBAL
-      - application
-      -
-      - Balance regnskab (inferred by name)
-    * - 1050
-      - data records
-      -
-      - Kontoplan (inferred by size and content)
-    * - FREGN
-      - application
-      -
-      - Regnskab (inferred by name)
+   * - Filename
+     - Type
+     - Date
+     - Function
+   * - JDC
+     - application
+     - V01.11.82
+     - unknown (missing a program disk)
+   * - FARK
+     - application
+     -
+     - Kontoark (inferred by name)
+   * - FUDTOG
+     - application
+     -
+     - Kontoudtog (inferred by name)
+   * - FMOMS
+     - application
+     -
+     - MOMS regnskab (inferred by name)
+   * - FRAPP
+     - application
+     -
+     - Rapport (inferred by name)
+   * - FBAL
+     - application
+     -
+     - Balance regnskab (inferred by name)
+   * - 1050
+     - data records
+     -
+     - Kontoplan (inferred by size and content)
+   * - FREGN
+     - application
+     -
+     - Regnskab (inferred by name)
 
 
 **DINDEX** can provide more details per file, but for a detailed oveview we
