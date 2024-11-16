@@ -20,6 +20,9 @@ from ROMs.
 
       background/q1lite.rst
       background/q1disks.rst
+      background/datamuseumdisk.rst
+      background/debugdiskdisk.rst
+      background/fluxsampledisk.rst
 
 
     .. toctree::
