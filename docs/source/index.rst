@@ -13,13 +13,13 @@ from ROMs.
 
   Q1 Microlite, gen. 3
 
-
     .. toctree::
-        :caption: Background
+        :caption: Q1-Lite
         :maxdepth: 3
         :hidden:
 
-        information
+      q1lite.rst
+      q1disks.rst
 
 
     .. toctree::
@@ -53,4 +53,12 @@ from ROMs.
         running
         annotate
         log
+
+
+    .. toctree::
+        :caption: Reference Material
+        :maxdepth: 3
+        :hidden:
+
+        information
         references
