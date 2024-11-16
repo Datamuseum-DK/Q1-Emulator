@@ -36,7 +36,7 @@ from ROMs.
 
 
     .. toctree::
-        :caption: PL/1
+        :caption: PL1
         :maxdepth: 3
         :hidden:
 
