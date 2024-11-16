@@ -18,8 +18,8 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-      q1lite.rst
-      q1disks.rst
+      background/q1lite.rst
+      background/q1disks.rst
 
 
     .. toctree::
