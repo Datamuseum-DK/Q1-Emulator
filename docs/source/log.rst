@@ -655,3 +655,13 @@ and the other windows for device-specific inspection.
 
     Using **ALTER** to write protect **SCR**, then failing attempt to **COPY** **DINDEX**
     from drive 1 to **SCR** on drive 2 due to protection.
+
+
+2024 11 06
+----------
+
+Added a third floppy image to the emulator. Now we are using all three
+available disks. The new one has PL/1 source code in it.
+
+Documentation got an overhaul. Also added a .mov file demonstrating write
+protection.
