@@ -13,7 +13,7 @@ import disks.debugdisk.image as debugdisk
 import disks.datamuseum.image as datamuseum
 import disks.fluxsamples.image as fluxsamples
 from timeit import default_timer as timer
-from multiprocessing import shared_memory
+#from multiprocessing import shared_memory
 
 '''
     Q1 Emulator
@@ -30,12 +30,13 @@ class Emulator:
             self.cpu.exit()
 
         self.cpu.m.memory[address] = value
-        self.shm.buf[address] = value
+        #self.shm.buf[address] = value
 
 
     def __del__(self):
-        self.shm.close()
-        self.shm.unlink()
+        #self.shm.close()
+        #self.shm.unlink()
+        pass
 
 
     def __init__(self, args):
@@ -58,11 +59,11 @@ class Emulator:
         self.cpu.m.set_input_callback(self.io.handle_io_in)
         self.cpu.m.set_output_callback(self.io.handle_io_out)
 
-        self.shm = shared_memory.SharedMemory(
-            name="shm_q1",
-            create=True,
-            size=65535)
-        print(self.shm.name)
+        # self.shm = shared_memory.SharedMemory(
+        #     name="shm_q1",
+        #     create=True,
+        #     size=65535)
+        # print(self.shm.name)
 
         self.stoppc = 0x1ffff
         if "stop" in self.prgobj:

@@ -10,6 +10,80 @@ Digitised by Mattis Lind?.
 
   Contents of **Felsökningsdiskette** as presented by DINDEX
 
+
+.. list-table:: Felsōkningsdiskette
+   :header-rows: 1
+
+   * - Filename
+     - Type
+     - Date
+     - Function
+   * - INDEX
+     - directory
+     -
+     - Housekeeping
+   * - SCR
+     - application
+     -
+     - write pattern to display
+   * - DALIGN
+     - application
+     -
+     - disk track alignment (speculation, might not work)
+   * - PRINT
+     - application
+     -
+     - unknown (might not work)
+   * - RTCTEST
+     - application
+     -
+     - Periodic beep cauused by timer interrupt
+   * - CONV
+     - application
+     -
+     - unknown (crashes emulator)
+   * - PTEST
+     - application
+     -
+     - prints a test pattern
+   * - DANKB
+     - application
+     -
+     - Switches to danish keyboard (inferred, might not be working)
+   * - DISPTEST
+     - application
+     -
+     - repeatedly write different patterns to display
+   * - SWEDKB
+     - application
+     -
+     - Swedish keyboard test - shifts and LEDs (by application menu, might not work)
+   * - GERMKB
+     - application
+     - 06/28/77
+     - German keyboard test (inferred by filename, might be danish actually)
+   * - SELKB
+     - application
+     -
+     - unknown (program seems to crash or fail to load)
+   * - DINDEX
+     - application
+     -
+     - List floppy contents (not working)
+   * - COPY
+     - application
+     -
+     -
+   * - ALTER
+     - application
+     - 12/09/77 (v2.0)
+     - Rename, protect, unprotect files (by usage)
+   * - MTEST
+     - application
+     -
+     - Memory test? (guesswork, not working)
+
+
 .. code-block:: text
 
     > cd disks/debugdisk

@@ -38,18 +38,14 @@ program called **F1**.
      - application
      - 821008 (v4.9)
      - Filecopy
-   * - COPY
-     - application
-     - 821008 (v4.9)
-     - Filecopy
    * - SORT
      - application
      -
      - (might be corrupted)
-   * - JDC
+   * - DINDEX
      - application
-     - V01.11.82
-     - unknown (missing a program disk)
+     - 810211 (v3.3)
+     - List floppy contents (by usage)
 
 
 .. list-table:: Accounting related programs
