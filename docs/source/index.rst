@@ -36,6 +36,13 @@ from ROMs.
 
 
     .. toctree::
+        :caption: PL/1
+        :maxdepth: 3
+        :hidden:
+
+        pl1
+
+    .. toctree::
         :caption: Emulator
         :maxdepth: 3
         :hidden:

@@ -1,14 +1,19 @@
 
 
 class Track:
+    def __init__(self):
+        self.overhead = 12 # besides record size: markers, ckecksum 0x10, etc.
+        self.offset_0x9e = 7
+
+    # Handle INDEX track which has fixed size
     def index(self, data, records, record_size):
+        assert record_size == 40
         d = data
         for record in range(records):
-            overhead = 8
             i = 0
-            offset = record * (record_size + overhead)
+            offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += 5
+            i += self.offset_0x9e
             assert d[offset + i] == 0x9b
             i += 1
 
@@ -20,23 +25,22 @@ class Track:
             disk = d[offset + i + 15]
             ftrack = d[offset + i + 16] + (d[offset + i + 17] << 8)
             ltrack = d[offset + i + 18] + (d[offset + i + 19] << 8)
-            assert recno == 0
+            #assert recno == 0
             if nrecs:
-                print(f'{filename}: nrecs {nrecs:2}, record size {recsz:3}, recs/trk: {rpt:3}, disk {disk}, first track {ftrack:2}, last track {ltrack:2}')
+                print(f'{filename}: recno {recno}, nrecs {nrecs:2}, record size {recsz:3}, recs/trk: {rpt:3}, disk {disk}, first track {ftrack:2}, last track {ltrack:2}')
 
-
-    def info(self, track, data, records, record_size):
-        if track == 0:
-            self.index(data, records, record_size)
-
+    # Handle case where segments are loaded according to ROS manual
+    # separator, address, number of bytes, ....
+    def loadable(self, track, data, records, record_size):
+        assert record_size == 255
         d = data
         for record in range(records):
-            overhead = 8
+            print(f'record {record}')
             firstline = False
             i = 0
-            offset = record * (record_size + overhead)
+            offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += 5
+            i += self.offset_0x9e
             assert d[offset + i] == 0x9b
             i += 1
             while 255 - i  >= 5:
@@ -76,6 +80,63 @@ class Track:
                 s0 = f'{addr:04x}'
                 print(f'{s0} {s1:48} {s2}')
                 print()
+
+
+    def program(self, track, data, records, record_size):
+        d = data
+        for record in range(records):
+            i = 0
+            offset = record * (record_size + self.overhead)
+            assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
+            i += self.offset_0x9e
+            assert d[offset + i] == 0x9b
+            i += 1
+
+            ch = d[offset + i: offset + i + record_size]
+            print(''.join(list(map(chr, ch))))
+
+
+    def rawdata(self, track, data, records, record_size):
+        d = data
+        for record in range(records):
+            i = 0
+            offset = record * (record_size + self.overhead)
+            assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
+            i += self.offset_0x9e
+            assert d[offset + i] == 0x9b
+            i += 1
+
+            ch = d[offset + i: offset + i + record_size]
+            #print(''.join(list(map(chr, ch))))
+            cha = [ chr(x) if 32 <= x < 127 else '.' for x in ch]
+            print(f'{record:03}', ''.join(cha))
+
+            # this output can be filtered for more condensed output:
+            # python3 image.py | grep -v '\.\.\.\.\.\.\.' | grep -v '       '
+
+    # INDEX track handled separately
+    # Currently only works for loadable tracks (record size 255)
+    def info(self, track, data, records, record_size):
+        print(f'\nTrack information for track {track}\n')
+        if track == 0:
+            self.index(data, records, record_size)
+            return
+
+        if record_size == 255:
+            self.loadable(track, data, records, record_size)
+            return
+
+        if record_size == 79:
+            self.program(track, data, records, record_size)
+            return
+
+        if record_size == 20:
+            self.rawdata(track, data, records, record_size)
+            return
+
+        print('unsupported record type')
+
+
 
 
 class FileSys:

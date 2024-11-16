@@ -91,7 +91,7 @@ class Emulator:
             elif ch == 8224: # opt-t
                 args.decode = not args.decode
             elif ch == 170: # opt-a misc debug FDs, floppy dump
-                self.io.floppy.disk.drives[1].dump(0)
+                self.io.floppy.disk.drives[2].dump(0)
                 # self.ros.index()
                 # self.ros.file()
                 # self.ros.disk()
