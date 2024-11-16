@@ -18,11 +18,11 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-      background/q1lite.rst
-      background/q1disks.rst
-      background/datamuseumdisk.rst
-      background/debugdiskdisk.rst
-      background/fluxsampledisk.rst
+        background/q1lite.rst
+        background/q1disks.rst
+        background/datamuseumdisk.rst
+        background/debugdiskdisk.rst
+        background/fluxsampledisk.rst
 
 
     .. toctree::
