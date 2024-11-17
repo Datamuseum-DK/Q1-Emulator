@@ -586,11 +586,13 @@ V10RGENA
 
 Q1
 ^^
-Program should use tracks 16 - 20, but only 16 -18 were available.
+
+The Q1 program uses tracks 16 - 20, but only 16 -18 were available.
 
 
 
 .. code-block:: text
+
     DCL     VERS                     FIXED (8) INIT (14831011);
     /* Q1 [R ETT MENYPROGRAM SOM TAR IN DAGENS DATUM OCH BEORDRAR INST[LLNING AV
     /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
