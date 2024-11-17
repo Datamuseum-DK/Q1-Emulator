@@ -580,3 +580,264 @@ V10RGENA
             CALL PLOAD('Q       ');
 
     END;
+
+
+
+
+Q1
+^^
+Program should use tracks 16 - 20, but only 16 -18 were available.
+
+
+
+.. code-block:: text
+    DCL     VERS                     FIXED (8) INIT (14831011);
+    /* Q1 [R ETT MENYPROGRAM SOM TAR IN DAGENS DATUM OCH BEORDRAR INST[LLNING AV
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    PROGRAMMET ADMINISTERAR SEDAN UTHOPP TILL BEORDRAT PROGRAM 780405 EJ KLAR J] */
+
+    DCL 1 HJSTR,
+          2 VNR FIXED(7),   /* SISTA FAKTURANR */
+          2 VVR FIXED(7),   /* SISTA ORDERNR */
+          2 LUFT CHAR(52);  /* EJ ANV[ND AREA */
+
+        /*  60 BYTES  */
+
+    DCL 1 KSTR,
+          2 GEN CHAR(4),
+          2 TVECKTOR(12) BINARY,
+          2 ANM CHAR(32);
+
+        /*  60 BYTES  */
+
+
+    DCL MTEX(30) CHAR(45),  /* TEXTER I MENYERNA */
+        MTAB(0:12,12) BINARY/* MENYTEXT PEKARE */
+        INIT( 3, 4,12, 8, 1, 2, 0, 0, 0, 1, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+             13,14,15,16, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              9,10,11,17,18,19, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        S CHAR(1),          /* SORTERINGS FLAGGA N=SORTERING UNDERTRYCKS */
+        LTEX(15) CHAR(25), /* TEXTSTR[NG I CALL LOAD STYR SORT & HOPP TILL
+                            L[MPLIGT PROGRAM */
+        LTAB(12,12) BINARY  /* LOADTEXT PEKARE */
+        INIT( 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              5, 6, 7, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              4, 4, 4, 8, 8, 9, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        XX CHAR(25),        /* TOM STR[NG */
+        I BINARY,           /* INDEXREG */
+        SVAR CHAR(1),       /* SVARSVARIABEL */
+        T1 CHAR(1),
+        T8 CHAR(8),
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+        K70 FILE,
+        K71 FILE,
+        K80 FILE,
+        K81 FILE,
+        K90 FILE,
+        K91 FILE,
+        ONRCH CHAR(6),
+        RNR BINARY,
+        ONR CHAR(4),
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+        P POINTER,
+        D BASED(P) CHAR(6),
+        PP POINTER,
+        1 STR BASED(PP),
+          2 X CHAR(2),
+          2 Y CHAR(2),
+          2 FIRMA CHAR(1),
+          2 OP_KOD BINARY,
+          2 RADANT BINARY        INIT (1),
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+
+
+    TEST:PROC;
+    DCL PTEST POINTER,
+        CH BASED(PTEST) CHAR(1),
+        PTAN POINTER,
+        CH1 BASED(PTAN) CHAR(1),
+        ANTAL BINARY;
+
+       ANTAL=0;
+       UNSPEC(PTEST)=16533;
+       UNSPEC(PTAN)=16536;
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    R: PUT FILE(D) EDIT('  VEM [R OPERAT\R:')(A(41));
+       CALL CORED(0);
+       I=1;
+    R1:IF CH=' ' THEN DO;
+          IF CH1=' ' THEN DO;
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+             GET SKIP LIST(ONRCH);
+             PUT FILE(D) SKIP;
+             GO TO R;
+          END;
+          CALL TYPIST('
+    ',1);
+          GO TO R2;
+       END;
+       ELSE DO;
+          CALL CLEER(1);
+       END;
+       GO TO R1;
+
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+       I=I+1;
+       IF I<7 THEN GO TO R1;
+
+       ONR=SUBSTR(ONRCH,3,4);
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+       IF RNR>50 | RNR<1 THEN GO TO FEL1;
+       OPEN KFIL;
+       UNSPEC(KFIL)=RNR;
+       READ FILE(KFIL) INTO(KSTR);
+       IF ONR=GEN THEN GO TO FEL1;
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+
+    FEL1:
+       PUT FILE(D) EDIT(ONRCH)(A(6))('  OPERAT\RSKODEN [R INTE GODK[ND')(A(47))
+       ('  VAR GOD REGISTRERA NY KOD')(A);
+       JJ=0;
+       CALL MOVEBUFF(JJ);
+       ANTAL=ANTAL+1;
+       IF ANTAL=3 THEN DO;
+          CALL CORED(0);
+    R3:   CALL OUTPUT(1,6);
+          DO I=1 TO 300;
+          END;
+          GO TO R3;
+       END;
+       GO TO R;
+    END;
+
+
+
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(1)='10 = OPERAT\RS-ID PARAMETRAR';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(4)='2  = [NDRING KONTOTABELLER';
+    MTEX(5)='1 = KONTOTABELL';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(9)='1 = KONTOPLAN';
+    MTEX(10)='2 = U-KONTOTABELL';
+    MTEX(11)='3 = I-K-SLAGSTABELL';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(13)='1 = UPPDAT AV REGISTER';
+    MTEX(14)='2 = VERIFIKATIONSF\RT.';
+    MTEX(15)='3 = AVST[MNINGSLIST F\R VER.';
+    MTEX(16)='4 = KONTOKONTROLL';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(18)='5 = SALDOLISTA';
+    MTEX(19) = '6 = RAPPORTGENERATOR KTO-IK ';
+
+
+
+
+    LTEX(1)='V1      ';
+
+    Track information for track 18
+
+    LTEX(2)='V2      ';
+    LTEX(3)='V3      ';
+    LTEX(4)='V4      ';
+    LTEX(5)='V5      ';
+    LTEX(6)='V8      ';
+    LTEX(7)='V9      ';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    LTEX(9)='V10RGOBJ';
+    LTEX(10)='';
+
+
+
+
+
+
+    /*  H [ R   B \ R J A R   H U V U D P R O G R A M M E T  */
+
+
+       UNSPEC(P)=16570;
+       UNSPEC(PP)=16616;
+       S='N';
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+       CALL DATCHECK(DATUM);
+       IF DATUM='0     ' THEN DO;
+          PUT FILE(D) SKIP;
+    L01:  PUT FILE(D) EDIT('            Q1/LITE at your service')(A(82))
+          ('datum:')(A(6));
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+          IF D='      ' THEN GO TO SLUT;
+          CALL DATCHECK(DATUM);
+          IF DATUM='0     ' THEN DO;
+             PUT FILE(D) EDIT('        ANGIVET DATUM ')(A)(D)(A(7))
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+             (XX)(A(120))(XX)(A(115))(XX)(A(68));
+             GO TO L01;
+          END;
+          PUT FILE(D) SKIP EDIT(VERSION)(A(96))('[R DATUM')(A(9))(DATUM)(A(7))
+          ('R[TT UPPFATTAT? "J" ELLER "N"')(A(78));
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+          IF SVAR='J' THEN DO;
+             J=88;
+             CALL MOVEBUFF(J);
+             PUT FILE(D) EDIT('        VAR GOD REGISTRERA NYTT DATUM.')(A(120))
+             (XX)(A(120))(XX)(A(115))(XX)(A(121));
+             GO TO L01;
+          END;
+          CALL TEST;
+          OP_KOD=RNR;
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+                                (A(43));
+    L02:
+          GET SKIP LIST (RADANT);
+          IF RADANT < 2  THEN RADANT = 51;
+          IF RADANT < 30 | RADANT > 80 THEN GO TO L02;
+       END;
+       ELSE DO;
+          OPEN KFIL;
+          UNSPEC(KFIL)=OP_KOD;
+          ON ERROR GO TO L00;
+          READ FILE(KFIL) INTO(KSTR);
+          GO TO L001;
+    L00:  CALL TEST;
+          OP_KOD=RNR;
+       END;
+    L001:D='0';
+    L0:
+
+       X='0 ';
+
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+
+       DO I=1 TO 12;
+         IF MTAB(X,I)=0 THEN GO TO L5;
+    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+       END;
+
+    L5:GET SKIP LIST(Y);
+       IF Y='S ' THEN GO TO START;
+
+       IF INDEX('1 ;2 ;3 ;4 ;5 ;6 ;7 ;8 ;9 ;10;11;12',Y)=0 THEN DO;
+         IF X='0 ' THEN GO TO L5;
+         GO TO L0;
