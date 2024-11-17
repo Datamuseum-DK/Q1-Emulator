@@ -587,7 +587,9 @@ V10RGENA
 Q1
 ^^
 
-The Q1 program uses tracks 16 - 20, but only 16 -18 were available.
+The Q1 program uses tracks 16 - 20, but only 16 -18 were available. There are
+several missing lines. A few related to initialisation of text variables have
+been reconstructed.
 
 
 
@@ -739,18 +741,18 @@ The Q1 program uses tracks 16 - 20, but only 16 -18 were available.
     /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
     MTEX(4)='2  = [NDRING KONTOTABELLER';
     MTEX(5)='1 = KONTOTABELL';
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(6)=' missing text 1'; /*   !MISSING LINE - RECONSTRUCTED */
+    MTEX(7)=' missing text 2'; /*   !MISSING LINE - RECONSTRUCTED */
+    MTEX(8)=' missing text 3'; /*   !MISSING LINE - RECONSTRUCTED */
     MTEX(9)='1 = KONTOPLAN';
     MTEX(10)='2 = U-KONTOTABELL';
     MTEX(11)='3 = I-K-SLAGSTABELL';
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(12)=' missing text 4'; /*   !MISSING LINE - RECONSTRUCTED */
     MTEX(13)='1 = UPPDAT AV REGISTER';
     MTEX(14)='2 = VERIFIKATIONSF\RT.';
     MTEX(15)='3 = AVST[MNINGSLIST F\R VER.';
     MTEX(16)='4 = KONTOKONTROLL';
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    MTEX(17)=' missing text 5'; /*   !MISSING LINE - RECONSTRUCTED */
     MTEX(18)='5 = SALDOLISTA';
     MTEX(19) = '6 = RAPPORTGENERATOR KTO-IK ';
 
@@ -758,16 +760,13 @@ The Q1 program uses tracks 16 - 20, but only 16 -18 were available.
 
 
     LTEX(1)='V1      ';
-
-    Track information for track 18
-
     LTEX(2)='V2      ';
     LTEX(3)='V3      ';
     LTEX(4)='V4      ';
     LTEX(5)='V5      ';
     LTEX(6)='V8      ';
     LTEX(7)='V9      ';
-    /*   !MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE, MISSING LINE!   */
+    LTEX(8)='xxxxxxxx'; /*   !MISSING LINE - RECONSTRUCTED */
     LTEX(9)='V10RGOBJ';
     LTEX(10)='';
 
