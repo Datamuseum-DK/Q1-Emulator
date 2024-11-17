@@ -2,8 +2,14 @@
 
 class Track:
     def __init__(self):
-        self.overhead = 12 # besides record size: markers, ckecksum 0x10, etc.
-        self.offset_0x9e = 7
+        # overhead consists of
+        #   0x9e, trk, rec, csum, 0x10, 0x00, 0x00
+        self.overhead_0x9e = 7
+        #   0x9b,           csum, 0x10, 0x00, 0x00
+        self.overhead_0x9b = 5
+
+        self.overhead = self.overhead_0x9e + self.overhead_0x9b
+
 
     # Handle INDEX track which has fixed size
     def index(self, data, records, record_size):
@@ -13,7 +19,7 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += self.offset_0x9e
+            i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
 
@@ -40,7 +46,7 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += self.offset_0x9e
+            i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
             while 255 - i  >= 5:
@@ -88,7 +94,7 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += self.offset_0x9e
+            i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
 
@@ -102,7 +108,7 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
-            i += self.offset_0x9e
+            i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
 

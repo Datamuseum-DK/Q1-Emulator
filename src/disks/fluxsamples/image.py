@@ -3,12 +3,12 @@ import sys
 sys.path.insert(0, '../..')
 
 from disks.fluxsamples import t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11
-from disks.fluxsamples import t12, t13, t14, t15
+from disks.fluxsamples import t12, t13, t14, t15, t16, t17, t18
 import filesys
 
 tracks = [t0.data, t1.data, t2.data, t3.data, t4.data, t5.data, t6.data, t7.data,
           t8.data, t9.data, t10.data, t11.data, t12.data, t13.data, t14.data,
-          t15.data]
+          t15.data, t16.data, t17.data, t18.data]
 
 fs = filesys.FileSys()
 fs.loadtracks(tracks) #
@@ -32,3 +32,6 @@ if __name__ == '__main__':
     track.info(13, fs.data[13],  67, 100)
     track.info(14, fs.data[14],  30, 255)
     track.info(15, fs.data[15],   1, 255)
+    track.info(16, fs.data[16],  82,  79)
+    track.info(17, fs.data[17],  82,  79)
+    track.info(18, fs.data[18],  82,  79)
