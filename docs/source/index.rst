@@ -44,6 +44,8 @@ from ROMs.
         :hidden:
 
         pl1
+        pl1_v10rgena
+        pl1_q1
 
     .. toctree::
         :caption: Emulator
