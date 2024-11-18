@@ -15,7 +15,7 @@ Once the initialisation is done the emulator enters a repeated series of single
 instruction **steps**.
 
 
-.. figure:: images/emuarch.png
+.. figure:: ../images/emuarch.png
   :width: 800
   :align: center
 
@@ -47,7 +47,7 @@ The emulator can be run with disassembly:
 However, for interactive sessions it is better to skip periodic hexdump and
 instruction decode, and use the display emulator:
 
-.. figure:: images/displayemu.png
+.. figure:: ../images/displayemu.png
   :width: 800
   :align: center
 

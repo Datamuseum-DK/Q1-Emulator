@@ -8,7 +8,7 @@ on page 10 and 11.
 This is useful when you want to simulate keyboard input. The documentation is
 incomplete as it doesn't mention the important 'GO' key with code 0x0e.
 
-.. figure:: images/q1keyboard.png
+.. figure:: ../images/q1keyboard.png
   :width: 800
   :align: center
 
@@ -21,7 +21,7 @@ Some keys have built-in LEDs to indicate state: Shift Lock, 3RD shift(?),
 4TH Shift, INSRT MODE, K1, K2 and K3.
 
 
-.. figure:: images/q1keyboard_dm.jpg
+.. figure:: ../images/q1keyboard_dm.jpg
   :width: 800
   :align: center
 

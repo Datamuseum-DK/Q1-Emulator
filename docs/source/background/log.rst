@@ -457,7 +457,7 @@ loading and running the 'SCR' program from (emulated) disk.
 Better display emulation. Had to resort to using UDP to send the
 display buffer to a **curses** based application.
 
-.. figure:: images/displayemu.png
+.. figure:: ../images/displayemu.png
   :width: 800
   :align: center
 
@@ -495,7 +495,7 @@ main objective was to run the DINDEX program which was corrupted on the
 debugdisk (felsökningsdiskett) from Mattis.
 
 
-.. figure:: images/dindex.png
+.. figure:: ../images/dindex.png
   :width: 800
   :align: center
 
@@ -567,7 +567,7 @@ based on individual track information. Track 0 has no information an thus we
 have no filenames to help us. Many files/tracks seem to have unrecoverable
 errors.
 
-.. figure:: images/pl1diskexcel.png
+.. figure:: ../images/pl1diskexcel.png
   :width: 800
   :align: center
 
@@ -617,7 +617,7 @@ Added WRITE support and support for multiple disks (merged from other branch).
 Using the program **ALTER**, files can now be renamed. Looks like they can also
 be write protected. But write protect does apparently not prevent renaming.
 
-.. figure:: images/alter_rename.png
+.. figure:: ../images/alter_rename.png
   :width: 400
   :align: center
 
@@ -640,7 +640,7 @@ to start logging in **utils**. Now the emulator console can be used for debuggin
 and the other windows for device-specific inspection.
 
 
-.. figure:: images/udplogging.png
+.. figure:: ../images/udplogging.png
   :width: 1024
   :align: center
 
@@ -649,7 +649,7 @@ and the other windows for device-specific inspection.
   ... and used it to fix the crashing bug. Now multiple floppy drives
   are supported (1 to 7) and we can test the **COPY** utility:
 
-  .. figure:: images/alter_copy_wp.png
+  .. figure:: ../images/alter_copy_wp.png
     :width: 400
     :align: center
 
