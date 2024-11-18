@@ -30,12 +30,12 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-        roms
+        background/roms
         q1io
-        q1_io_keyboard
-        printer
-        disk
-        filesys
+        background/q1_io_keyboard
+        background/printer
+        background/disk
+        emulator/filesys
 
 
     .. toctree::
@@ -43,21 +43,21 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-        pl1
-        pl1_v10rgena
-        pl1_q1
+        pl1/pl1
+        pl1/pl1_v10rgena
+        pl1/pl1_q1
 
     .. toctree::
         :caption: Emulator
         :maxdepth: 3
         :hidden:
 
-        hooks
-        emulator
-        disassembler
-        running
-        annotate
-        log
+        emulator/hooks
+        emulator/emulator
+        emulator/disassembler
+        emulator/running
+        emulator/annotate
+        background/log
 
 
     .. toctree::
@@ -65,5 +65,5 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-        information
-        references
+        background/information
+        background/references
