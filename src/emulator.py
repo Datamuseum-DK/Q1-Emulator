@@ -45,6 +45,8 @@ class Emulator:
         self.funcs = self.prgobj["funcs"]
 
         self.cpu = c.Cpu(self.prgobj)
+        self.defaultsteps = 103
+        self.steps = self.defaultsteps
 
         floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs]
         harddisks = [datamuseum.fs, debugdisk.fs]
@@ -91,6 +93,11 @@ class Emulator:
                 self.int38(kc.okey(k))
             elif ch == 8224: # opt-t
                 args.decode = not args.decode
+                if args.decode:
+                    self.steps = 1
+                else:
+                    self.steps = self.defaultsteps
+
             elif ch == 170: # opt-a misc debug FDs, floppy dump
                 self.io.floppy.disk.drives[2].dump(0)
                 # self.ros.index()
@@ -165,6 +172,7 @@ class Emulator:
         io = self.io
         cpu = self.cpu
         kc = self.kc
+        n = self.steps
 
         tstart = timer()
         while True:
@@ -212,8 +220,7 @@ class Emulator:
             #self.pl1_debug()
 
             # main cpu emulation step
-            n = 103
-            cpu.step(n) # actual emulation of the next n instruction(s)
+            cpu.step(self.steps) # actual emulation of the next n instruction(s)
 
             # Handle breakpoints
             if pc in (args.breakpoint, self.stoppc):

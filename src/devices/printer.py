@@ -11,14 +11,16 @@ class SerialImpactPrinter:
         self.poshi2 = 0
         self.pos = [0.0, 0.0]
         self.dir = [0, 0]
-        self.buffer = ''
+        self.buffer = [' ' for x in range(90)]
 
     def status(self) -> int:
         return 0x01 # selected
 
 
     def output(self, value):
-        self.buffer += chr(value)
+        #print(f'print {chr(value)}, xpos {self.pos[0]} {self.buffer}')
+        idx = int(self.pos[0]/0.205)
+        self.buffer[idx]= chr(value)
 
 
     def ctrl_06(self, value: int):
@@ -32,10 +34,8 @@ class SerialImpactPrinter:
             v = cm * dx
             x = x + v
             if dx < -0.00001:
-                print(self.buffer)
-                self.buffer = ''
-            else:
-                self.buffer += ' ' * (int(v/0.21) -1)
+                udptx.send(''.join(self.buffer))
+                self.buffer = [' ' for x in range(90)]
 
         if dy != 0: # y-dir
             dir = f' I '
@@ -43,7 +43,7 @@ class SerialImpactPrinter:
             v = cm * dy
             y = y + v
         self.pos = [x, y]
-        udptx.send(f'SI printer ctrl 06: move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
+        #udptx.send(f'SI printer ctrl 06: move {dir} {v:6.2f} cm. pos ({x:6.2f}, {y:6.2f})')
 
 
 
@@ -74,4 +74,4 @@ class SerialImpactPrinter:
             desc += 'forward '
         desc += 'motion'
 
-        udptx.send(f'SI printer ctrl 07: {value:02x}: [{desc}]')
+        #udptx.send(f'SI printer ctrl 07: {value:02x}: [{desc}]')
