@@ -19,6 +19,8 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
+            assert d[offset + i + 1] == 0x00
+            assert d[offset + i + 2] == record
             i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
@@ -46,6 +48,8 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
+            assert d[offset + i + 1] == track
+            assert d[offset + i + 2] == record
             i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1
@@ -94,6 +98,8 @@ class Track:
             i = 0
             offset = record * (record_size + self.overhead)
             assert d[offset + i] == 0x9e, f'{i=}, {d[offset + i]=}'
+            assert d[offset + i + 1] == track, f'expected track {track}'
+            assert d[offset + i + 2] == record, f'expected rec {record}'
             i += self.overhead_0x9e
             assert d[offset + i] == 0x9b
             i += 1

@@ -12,6 +12,7 @@ import utils.misc as misc
 import disks.debugdisk.image as debugdisk
 import disks.datamuseum.image as datamuseum
 import disks.fluxsamples.image as fluxsamples
+import disks.artificial.image as artificial
 from timeit import default_timer as timer
 #from multiprocessing import shared_memory
 
@@ -48,7 +49,8 @@ class Emulator:
         self.defaultsteps = 103
         self.steps = self.defaultsteps
 
-        floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs]
+        #floppydisks = [datamuseum.fs, , fluxsamples.fs]
+        floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs, artificial.fs]
         harddisks = [datamuseum.fs, debugdisk.fs]
         self.io = z80io.IO(self.cpu.m, floppydisks, harddisks)
 

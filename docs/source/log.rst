@@ -657,7 +657,7 @@ and the other windows for device-specific inspection.
     from drive 1 to **SCR** on drive 2 due to protection.
 
 
-2024 11 06
+2024 11 16
 ----------
 
 Added a third floppy image to the emulator. Now we are using all three
@@ -665,3 +665,22 @@ available disks. The new one has PL/1 source code in it.
 
 Documentation got an overhaul. Also added a .mov file demonstrating write
 protection.
+
+
+2024 11 18
+----------
+
+Added an artificial image 'artificial' to the emulator. The purpose was to
+demonstrate that COPY also works. But previously there were no two files
+with the exact same number of records and record size so I created two:
+TT1R10 and TT2R10. One is unsorted, the other is sorted. Perhaps I can later
+use these to make SORT work too.
+
+Also dicscovered that some programs take arguments and if these are not provided
+will ask the user for input.
+
+    > COPY TT1R10 TT2R10 4 4
+
+Will attmpt to copy TT1R10 from track 4 to TT2R10 on track 4. Trying this I
+got some error messages that discovered more errors/inconsistencies with the
+disk images copied over from fluxsampledisk.

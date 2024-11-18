@@ -17,7 +17,7 @@ fs.loadtracks(tracks) #
 if __name__ == '__main__':
     track = filesys.Track()
     track.info( 0, fs.data[0],   16,  40)
-    track.info( 1, fs.data[1],   77,  79)
+    track.info( 1, fs.data[1],   82,  79)
     track.info( 2, fs.data[2],   82,  79)
     track.info( 3, fs.data[3],   82,  79)
     track.info( 4, fs.data[4],   82,  79)
