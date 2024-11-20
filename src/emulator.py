@@ -101,7 +101,9 @@ class Emulator:
                     self.steps = self.defaultsteps
 
             elif ch == 170: # opt-a misc debug FDs, floppy dump
-                self.io.floppy.disk.drives[2].dump(0)
+                drive = input("enter drive (1-7):\n")
+                track = input("enter track:\n")
+                self.io.floppy.disk.drives[int(drive)-1].dump(int(track))
                 # self.ros.index()
                 # self.ros.file()
                 # self.ros.disk()

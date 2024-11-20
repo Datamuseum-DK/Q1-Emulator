@@ -2,18 +2,23 @@
 Q1-Lite
 =======
 
-To work with the Q1 it is important to understand that the system
-has no operating system as we know it today.
+To work with the Q1 it is important to understand that the Q1 operating system
+has no built-in commands. As far as I can tell, not a single one.
 
-Instead the user types in a command which is interpreted as the name
-of a program located on the disk. This program is then loaded and executed.
-Ekstra arguments after the filename are arguments to the program.
+All there is is keyboard input with some line editing support such as backspace,
+tab and delete.
+
+The user types in a command, which is interpreted as the name
+of a program located on one of the disks. This program is then loaded and
+executed. Extra text after the filename is (sometimes) interpreted as
+arguments to the program.
 
 Programs can fail and decide to halt. Typically when this happens, user
-interaction is required. The normal approach is to press the 'GO' key.
+interaction is required. The normal approach is to press the 'GO' key. Some
+programs can be halted by pressing the 'STOP' key.
 
-If the system is completely frozen there is a 'RESET' button to restart
-the system.
+There is a also a 'RESET' button to restart the system if the program is running
+in an infinite loop.
 
 Here are some examples of commands that are known to work
 
@@ -28,9 +33,11 @@ Q1 drives are enumerated starting with 1.
 
 Starts the DINDEX program. The user will be queried for which drive to investigate.
 
-   > DINDEX 3
+    > DINDEX 3
 
 Starts DINDEX looking at drive 3
+
+From here the program is function-key driven for the nine functions. Use F1 - F9.
 
 
 **ALTER**
@@ -61,6 +68,8 @@ Performs renaming without user interaction.
 
 Commands for protecting and freeing/unprotecting a file without user interaction:
 
+.. code-block:: text
+
     > ALTER Protect 2 SCR
     > ALTER Free 2 SCR
 
@@ -78,5 +87,14 @@ must be identical.
 
 Syntax: COPY src dst src_disk dst_disk
 
+.. code-block:: text
+
     > COPY
     > COPY T1R10 T2R10 4 4
+
+
+**SORT**
+
+    > SORT TT1R10 TT2R10
+
+This command sorts TT1R10, whereas the second file seems untouched.
