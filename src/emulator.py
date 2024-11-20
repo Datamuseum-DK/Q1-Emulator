@@ -27,8 +27,9 @@ class Emulator:
         assert value < 256
         assert address < 65536
         if address < 0x4000: # 0x2000 - 0x3fff is unused
-            print(f"write to ROM (0x{address:04x}) error, exiting ...")
-            self.cpu.exit()
+            #print(f"write to ROM (0x{address:04x}) error, exiting ...")
+            print(f"write to ROM (0x{address:04x}), pc {self.cpu.m.pc} warning, no effect ...")
+            #self.cpu.exit()
 
         self.cpu.m.memory[address] = value
         #self.shm.buf[address] = value

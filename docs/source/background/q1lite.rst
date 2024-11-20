@@ -29,9 +29,13 @@ record size, number of records, start and end track, whether it is protected.
 
 Q1 drives are enumerated starting with 1.
 
+.. code-block:: text
+
     > DINDEX
 
 Starts the DINDEX program. The user will be queried for which drive to investigate.
+
+.. code-block:: text
 
     > DINDEX 3
 
@@ -45,22 +49,32 @@ From here the program is function-key driven for the nine functions. Use F1 - F9
 Rename, Protect or Free (unprotect) a file. ALTER takes zero or more
 arguments
 
+.. code-block:: text
+
     > ALTER
 
 Starts the ALTER program. The user is queried for which action to take.
+
+.. code-block:: text
 
     > ALTER Rename
 
 Starts ALTER and goes straight to the rename user input. User must supply the
 remaining information
 
+.. code-block:: text
+
     > ALTER Rename 2
 
 Rename file on disk 2. User must supply the src and dst filename
 
+.. code-block:: text
+
     > ALTER Rename 2 SCR
 
 Rename SCR on disk 2, user must provide destination filename.
+
+.. code-block:: text
 
     > ALTER Rename 2 SCR SCR2
 
@@ -78,6 +92,8 @@ Commands for protecting and freeing/unprotecting a file without user interaction
 
 Prints the contents of a file.
 
+.. code-block:: text
+
     > PRINT Q1
 
 **COPY**
@@ -94,6 +110,8 @@ Syntax: COPY src dst src_disk dst_disk
 
 
 **SORT**
+
+.. code-block:: text
 
     > SORT TT1R10 TT2R10
 

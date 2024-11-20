@@ -684,3 +684,17 @@ will ask the user for input.
 Will attmpt to copy TT1R10 from track 4 to TT2R10 on track 4. Trying this I
 got some error messages that discovered more errors/inconsistencies with the
 disk images copied over from fluxsampledisk.
+
+2024 11 20
+----------
+
+Tried running the **iws** and **peeldk** ROM images. These both use IO for
+addresses 0x10 and 0x11 which is used for serial communication. This was not
+the case for the **jdc** image. So new IO hooks have been added.
+
+The **iws** ROMs apparently tries to write to ROM addresses which causes the
+emulator to exit. This should be investigated.
+
+Neither image fully runs. For example for **iws** DINDEX cannot be started
+without adding a command line argument such as 'DINDEX 1' and for **peeldk**
+the program seems not to be loaded at all.

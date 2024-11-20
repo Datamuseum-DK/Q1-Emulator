@@ -2,6 +2,16 @@
 
 File System
 ===========
+
+
+.. attention::
+
+  New content should be addd to this section. It took a while to sort out
+  how data precisely is stored on the tracks. I now think I have it and just
+  need to update.
+
+
+
 (Mostly unconfirmed)
 By tracing CPU instructions and doing annotated disassembly I have
 made the following conclusions and assumptions.

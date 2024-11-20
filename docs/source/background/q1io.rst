@@ -59,10 +59,10 @@ The two documents have some differences. For example the known IO addresses are
      - Disk ctrl 2
      -
    * - 0x10 (IO)
-     -
+     - serial comms: select control register (O)
      - Data R+W
    * - 0x11 (IO)
-     -
+     - serial comms: r/w to comntrol register
      - ctrl 1, status 1
    * - 0x12 (IO)
      -

@@ -55,6 +55,12 @@ class IO:
         # Unknown IO - could this be printer (see DINDEX F5)?
         self.register_in_cb( 0x0c, self.handle_unkn_in_0c)
         self.register_out_cb(0x0c, self.handle_unkn_out_0c)
+
+        # First seen wirh IWS ROMs.
+        self.register_out_cb(0x10, self.handle_out_10)
+        self.register_in_cb( 0x11, self.handle_in_11)
+        self.register_out_cb(0x11, self.handle_out_11)
+
         # Floppy Disk - 5.25" ?
         self.register_in_cb( 0x19, self.handle_disk_in_19)
         self.register_in_cb( 0x1a, self.handle_disk_in_1a)
@@ -254,6 +260,35 @@ class IO:
             self.prtbuf=""
         else:
             self.prtbuf += chr(val)
+
+
+    # Used in both peeldk and iws imafe, but not jdc
+
+    def handle_out_10(self, value):
+        baud = {14:9600}
+        res = {0:'Sel. ctrl reg 1',
+               1:'reset interrupt line',
+               2:'Sel. ctrl reg 2',
+               4:'Sel. status reg.'}
+        msg =''
+        if value & 0x08 == 0: # bit 3 clear
+            id = value & 0x7
+            msg += f'REGSEL {res[id]}'
+
+        else: # bit 3 set
+            id = value >> 4
+            msg += f'MODSEL {baud[id]} baud'
+
+        udptx.send(f'0x10 out - value 0x{value:02x}: {msg}')
+
+    def handle_in_11(self) -> int:
+        status = 0x40 # data set ready? ASM IO addr p. 70
+        status = 0x00
+        udptx.send(f'0x11 in  - status {status}')
+        return status
+
+    def handle_out_11(self, value):
+        udptx.send(f'0x11 out - value 0x{value:02x}')
 
 
     ### Disk 2 Data and Control
