@@ -31,7 +31,7 @@ from ROMs.
         :hidden:
 
         background/roms
-        q1io
+        background/q1io
         background/q1_io_keyboard
         background/printer
         background/disk
