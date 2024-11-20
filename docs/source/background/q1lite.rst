@@ -10,7 +10,7 @@ tab and delete.
 
 The user types in a command, which is interpreted as the name
 of a program located on one of the disks. This program is then loaded and
-executed. Extra text after the filename is (sometimes) interpreted as
+executed. Additional text after the filename is (sometimes) interpreted as
 arguments to the program.
 
 Programs can fail and decide to halt. Typically when this happens, user

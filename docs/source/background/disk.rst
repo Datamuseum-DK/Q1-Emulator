@@ -17,13 +17,14 @@ are alse referred to in the Q1 documentation as **id records** and
 
 
 The ID record is always seven bytes long and consist of 0x9e followed by the
-track number, the record number, the checksums, 0x10, 0x00, 0x00.
+track number, the record number, the checksum, and the trailing
+bytes 0x10, 0x00, 0x00.
 
 The data record starts with 0x9b followed by a block of data, followed by
-the checksum and 0x10, 0x00, 0x00.
+the checksum and the trailing 0x10, 0x00, 0x00.
 
 The trailing 0x00's are not used upon reading a record from the disk. However,
-write operations write the zeroes.
+write operations write these zeroes.
 
 
 .. note::
@@ -36,8 +37,10 @@ There are three separate types of data records: INDEX files, program files
 and (generic) data files.
 
 All data records on a track have the same size called the record size. The
-record size only includes the user data (light blue in the figure). Record sizes
-can range from 1 byte (presumably) to 255 bytes.
+record size only includes the user data (light blue in the figure) and
+not the 0x9b, the checksum or the trailing bytes.
+
+Record sizes can range from 1 byte to 255 bytes.
 
 The lowest record size seen so far is 20 bytes and the highest is 255.
 
@@ -65,13 +68,17 @@ These are executable programs. Record sizes are 255 and multiple tracks
 may be used.
 
 A loadable file consists of a consecutive sequence of blocks. The maximum size
-for a block is 255. Each block has a one-0byte block separator, a two-byte address
+for a block is 255. Each block has a one- dbyte block separator, a two-byte address
 for where the data should be loaded and a one-byte length field. The separator
 can have any value, but 0 marks the end of the data in that record.
 
+.. note::
+
+  It seems possible to load zero bytes at a specified address.
+
 
 .. figure:: ../images/loadblock.png
-  :width: 800
+  :width: 700
   :align: center
 
   Loader record format.
@@ -86,8 +93,9 @@ Loading a program will then be a sequence of actions like
     load 100 bytes at 0xa100
     etc.
 
-For an executable program the last block typically loads two bytes into
-the address 0x4081. This will be the entry point for the program.
+For an executable program, the last block typically loads two bytes into
+the address 0x4081. Address 0x4080 contains a jump (jp) opcode and this is
+the entry point for the loaded program (ROS Users Manual p.2).
 
 The following is an example retrieved from the SCR program (z80 assembler)
 which only occupies a single record of track 1.
