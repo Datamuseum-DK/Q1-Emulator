@@ -25,6 +25,13 @@ the checksum and 0x10, 0x00, 0x00.
 The trailing 0x00's are not used upon reading a record from the disk. However,
 write operations write the zeroes.
 
+
+.. note::
+
+  The inconsistency of the checksum which covers 0x9e for id records
+  but excludes 0x9b for data records. This caused me a lot of frustration and
+  kept me from progress for several days.
+
 There are three separate types of data records: INDEX files, program files
 and (generic) data files.
 
@@ -99,3 +106,14 @@ which only occupies a single record of track 1.
 
   separator 0x0d: load   2 bytes into address 0x4081
   4081 00 43
+
+
+Generic data files
+^^^^^^^^^^^^^^^^^^
+
+No other files appear to have special interpretation, but record sizes may be
+imposed by other applications.
+
+For example PL/1 source code have record sizes of 79 bytes corresponding to
+(the maximum allowed?) size of a code line. Generic files with record size 255
+are allowed, but loadable files must have record size 255 as far as I can tell.
