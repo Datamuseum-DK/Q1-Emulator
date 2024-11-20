@@ -3,130 +3,99 @@
 File System
 ===========
 
+All tracks on the floppy disks have the same format as shown in the figure below.
+The track consists of alternating '0x9e' blocks and '0x9b' blocks. These
+are alse referred to in the Q1 documentation as **id records** and
+**data records**.
 
-.. attention::
+.. figure:: ../images/diskformat.png
+  :width: 800
+  :align: center
 
-  New content should be addd to this section. It took a while to sort out
-  how data precisely is stored on the tracks. I now think I have it and just
-  need to update.
-
-
-
-(Mostly unconfirmed)
-By tracing CPU instructions and doing annotated disassembly I have
-made the following conclusions and assumptions.
-
-The disk consists of 77 tracks (0 - 76), each track having 2468 bytes. I've
-decided that the 'index' position is located at the first byte of each
-track. I assume that when selecting a disk Track 0 is the first track.
-
-The disk controller issues a 'step' and a 'step direction' command.
-In the documentation (Q1 ASM IO addresess p. 80), Bit 5 is the step command
-and Bit 6 the 'direction' where  '1' is UP and 0 (assumed) DOWN. However
-I have had to reverse this logic. Perhaps I should have started at Track 76?
-
-I assume that the byte offset within a track is increasing on every read and
-also that it wraps around to 0 when reading past the last byte.
-
-The Q1 system seems to skip the first **2190** bytes on **track 0**, before
-trying to look for ID and Data records. Other offsets (not confirmed) seem
-to be present for the other tracks.
-
-2024 08 02
-
-There seem to be way more bytes on a track, perhaps upwards of 8000 bytes.
-
-A major source of information on disk formats was found here:
-
-https://github.com/MattisLind/q1decode/
+  Q1 floppy disk format. Blue lines show which fields are included in the
+  checksum.
 
 
+The ID record is always seven bytes long and consist of 0x9e followed by the
+track number, the record number, the checksums, 0x10, 0x00, 0x00.
 
-Index File
-==========
-Figure from ROS manual p. 17 gave a hint, but INDEX file does not
-use the File Name field. The INDEX file descriptor resides in
-the range 0x40a6 - 0x40b5.
+The data record starts with 0x9b followed by a block of data, followed by
+the checksum and 0x10, 0x00, 0x00.
 
-.. list-table:: File Descriptor
-   :header-rows: 1
+The trailing 0x00's are not used upon reading a record from the disk. However,
+write operations write the zeroes.
 
-   * - Address
-     - Name
-     - Description
-   * - 0x40a6
-     - Record Number
-     -
-   * - 0x40a8
-     - Number of Records
-     -
-   * - 0x40aa
-     - Record Length
-     -
-   * - 0x40ac
-     - Records/Track
-     -
-   * - 0x40ad
-     - Disk #
-     - 0 for INDEX
-   * - 0x40ae
-     - First Track
-     -
-   * - 0x40b0
-     - Last Track
-     -
-   * - 0x40b2
-     - Unused
-     -
-   * - 0x40b4
-     - Rec# bef. last op.
-     -
+There are three separate types of data records: INDEX files, program files
+and (generic) data files.
+
+All data records on a track have the same size called the record size. The
+record size only includes the user data (light blue in the figure). Record sizes
+can range from 1 byte (presumably) to 255 bytes.
+
+The lowest record size seen so far is 20 bytes and the highest is 255.
+
+INDEX
+^^^^^
+
+The index files reside on track 0 (also names INDEX) and contains information
+about the disk layout.
+
+The record size is 40 bytes and its layout is described in Q1 ROS Users Manual
+p. 18:
+
+.. figure:: ../images/filedescription.png
+  :width: 800
+  :align: center
+
+  File description only uses 24 bytes of the 40 available. The rest is typically
+  zeroed.
 
 
-LFILE
-=====
+Program files
+^^^^^^^^^^^^^
 
-Information about the file to be loaded (LFILE in ROS Manual)resides in
-the address range 0x40d0 - 0x40e7.
+These are executable programs. Record sizes are 255 and multiple tracks
+may be used.
 
-.. list-table:: File Descriptor
-   :header-rows: 1
-
-   * - Address
-     - Name
-     - Description
-   * - 0x40d0
-     - Record Number
-     -
-   * - 0x40d2
-     - File Name
-     -
-   * - 0x40da
-     - Number of Records
-     -
-   * - 0x40dc
-     - Record Length
-     -
-   * - 0x40de
-     - Records/Track
-     -
-   * - 0x40df
-     - Disk #
-     -
-   * - 0x40e0
-     - First Track
-     -
-   * - 0x40e2
-     - Last Track
-     -
-   * - 0x40e4
-     - Unused
-     -
-   * - 0x40e6
-     - Rec# bef. last op.
-     -
+A loadable file consists of a consecutive sequence of blocks. The maximum size
+for a block is 255. Each block has a one-0byte block separator, a two-byte address
+for where the data should be loaded and a one-byte length field. The separator
+can have any value, but 0 marks the end of the data in that record.
 
 
-2024 08 04
+.. figure:: ../images/loadblock.png
+  :width: 800
+  :align: center
 
-Or maybe not, see log comment from same date
+  Loader record format.
+
+
+Loading a program will then be a sequence of actions like
+
+.. code-block:: text
+
+    load 40 bytes at 0x9000
+    load 20 bytes at 0x9040
+    load 100 bytes at 0xa100
+    etc.
+
+For an executable program the last block typically loads two bytes into
+the address 0x4081. This will be the entry point for the program.
+
+The following is an example retrieved from the SCR program (z80 assembler)
+which only occupies a single record of track 1.
+
+.. code-block:: text
+
+  Track 1, Record 0
+  separator 0x0d: load 111 bytes into address 0x4300
+  4300 f3 3e 00 d3 0a 3e 05 d3 04 16 00 7a d3 03 14 7a  .>...>.....z...z
+  4310 fe 80 ca 36 43 2e ff 2d c2 17 43 db 01 fe 00 ca  ...6C..-..C.....
+  4320 0b 43 fe 0e ca 0b 43 fe 0f c2 0b 43 db 01 fe 0e  .C....C....C....
+  4330 c2 2c 43 c3 0b 43 21 42 43 0e 03 06 2d ed b3 c3  .,C..C!BC...-...
+  4340 09 43 20 20 20 20 20 20 20 20 20 20 20 20 20 54  .C             T
+  4350 48 49 53 20 53 50 41 43 45 20 46 4f 52 20 52 45  HIS SPACE FOR RE
+  4360 4e 54 20 20 20 20 20 20 20 20 20 20 20 20 20     NT
+
+  separator 0x0d: load   2 bytes into address 0x4081
+  4081 00 43
