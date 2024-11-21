@@ -525,9 +525,25 @@ jdc = {
         [0x1d34, 0x1f52, 'misc PL/1 code'],
         [0x1f53, 0x1f61, 'CLEAR() - clear 16 bytes in scratch'],
         [0x1f62, 0x1fff, 'misc PL/1 code'],
-
-
-    ]
+    ],
+        "pl1" : {
+            0x18cc: 'INST 15 - PUT data to specified device driver',
+            0x1938: 'INST 1F - return from subroutine',
+            0x194a: 'INST 23 - Get new line of keyboard input',
+            0x1950: 'INST 25 - GET char str from input',
+            0x196b: 'INST 26 - PUT char str',
+            0x1973: 'INST 28 - Put Edit character string',
+            0x1b4d: 'INST 2E - Read key',
+            0x1b77: 'INST 2B - Read from disk',
+            0x1baf: 'INST 2C - write on disk',
+            0x1bbc: 'INST 2D - rewrite on disk',
+            0x1bc9: 'INST 22 - open file',
+            0x1c12: 'INST 09 - compare character strings',
+            0x1c37: 'INST 07 - compare binary numbers',
+            0x1fb0: 'INST 34 - VERIFY',
+            0x1fdb: 'INST 30 - string length',
+            0x1ff2: 'INST 35 - INDEX'
+        }
 }
 
 

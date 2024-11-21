@@ -9,6 +9,7 @@ import ros as r
 import devices.z80io as z80io
 import progs.programs as prg
 import utils.misc as misc
+import utils.udptx as udp
 import disks.debugdisk.image as debugdisk
 import disks.datamuseum.image as datamuseum
 import disks.fluxsamples.image as fluxsamples
@@ -20,6 +21,7 @@ from timeit import default_timer as timer
     Q1 Emulator
 '''
 
+udptx = udp.UdpTx(port=5009, timestamp=True, nl=True)
 
 class Emulator:
 
@@ -137,28 +139,14 @@ class Emulator:
                 self.int38(ch)
 
 
-    # Probably only works for the JDC image
+    # Only works for the JDC image
     def pl1_debug(self):
-        if pc == 0x196b:
-            print('PL/1 0x26 PUT char str')
-
-        if pc == 0x1950:
-            print('PL/1 0x25 GET char str from input')
-
-        if pc == 0x196d:
-            saddr = cpu.m.hl
-            slen = cpu.m.bc & 0xff
-            if slen == 0:
-                print(f'PL/1 0x26 PUT char str')
-            else:
-                pslen = min(80, slen)
-                stxt = ""
-                print(f'{saddr:04x}, {pslen}')
-                for i in range(pslen):
-                    stxt += chr(cpu.mem.m[saddr +i])
-                print(f'PL/1 0x26 PUT char str - "{stxt}"')
-        # elif pc == 0x18cc:
-        #     print('PL/1 0x15 PUT char to selected device driver')
+        pc = self.cpu.m.pc
+        m = self.cpu.m
+        if pc in self.prgobj["pl1"]:
+            inst = self.prgobj["pl1"][pc]
+            regs = f'a: {m.a:02x}, bc: {m.bc:04x}, de: {m.de:04x}, hl: {m.hl:04x}'
+            udptx.send(f'{inst:40} ; {regs}')
 
 
     # Fake a keyboard interrupt, seems to work, but the Q1 interrupt model
@@ -222,7 +210,8 @@ class Emulator:
                 cpu.mem.hexdump(0x2000, 0x10000 - 0x2000) # dump RAM part of memory
 
             # Debugging PL/1 programs (experimental)
-            #self.pl1_debug()
+            # if cpu.m.pc > 0x1880:
+            #     self.pl1_debug()
 
             # main cpu emulation step
             cpu.step(self.steps) # actual emulation of the next n instruction(s)
