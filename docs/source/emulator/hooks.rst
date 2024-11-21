@@ -98,11 +98,17 @@ file descriptors.
 
 disk
 ^^^^
+
+.. note::
+
+  This section should be updated, as there are three classes handling disk
+  operations. The abstractions should probably also be revisited.
+
 The **disk** module provides a **Disk** class and a **Disk Control** class.
 The **control** class is used by the **z80io** module to perform disk functions
 due to the registered io callback functions.
 
-The **disk** can move (step) between tracks,read (but not yet write) data and
+The **disk** can move (step) between tracks,read and write data and
 respond to status commands. The disk needs to be initialised with a
 preformatted filesystem.
 
@@ -110,7 +116,7 @@ preformatted filesystem.
 filesys
 ^^^^^^^
 
-**filesys** provides funtions to create a filesystem by loading
+**filesys** provides functions to create a filesystem by loading
 track files reconstructed by Mattis Lind or from datamuseum using
 **loadtracks()**. The contents of the tracks can be inspected by
 **trackinfo()** which parses the records according to Figure 3 of

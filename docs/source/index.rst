@@ -37,7 +37,6 @@ from ROMs.
         background/roms
 
 
-
     .. toctree::
         :caption: PL/1
         :maxdepth: 3
@@ -47,16 +46,17 @@ from ROMs.
         pl1/pl1_v10rgena
         pl1/pl1_q1
 
+
     .. toctree::
         :caption: Emulator
         :maxdepth: 3
         :hidden:
 
-        emulator/hooks
         emulator/emulator
-        emulator/disassembler
         emulator/running
         emulator/diskimage
+        emulator/hooks
+        emulator/disassembler
         emulator/annotate
         background/log
 

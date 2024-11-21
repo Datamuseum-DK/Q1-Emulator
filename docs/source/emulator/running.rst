@@ -6,7 +6,7 @@ Running the emulator
 Interactive Session
 ^^^^^^^^^^^^^^^^^^^
 
-If you just want to interact with the Q1 via the keyboard you
+If you just want to interact with the Q1 via the keyboard, you
 should use the following invocation
 
 .. code-block:: text
@@ -14,18 +14,15 @@ should use the following invocation
   > python3 emulator.py         # no instr. decode, no hexdump
 
 Typed-in keys are passed to the Q1 system via fake interrupts.
-Characters are echoed to the display, so you can see what you are doing,
-but the implementation is not great. However it currently helps me in
-my investigations.
-
+Characters are sent to the display emulator.
 
 The keyboard interaction is currently tailored to my MacBook Pro
 keyboard. If you are using a different system you should make your own
-bindings. In this case the printed values for non printable characters
-are output during an interactive session.
+bindings. Values for non printable characters are output during an
+interactive session.
 
 On my MacBook Pro the following Q1 keys are implemented. Here,
-they referenced by their variable names, not the names printed on
+they are referenced by their variable names, not the names printed on
 the keys (see emulator.py):
 
 
@@ -67,7 +64,7 @@ the keys (see emulator.py):
   * - Option-t
     - Toggle instruction decode
   * - Option-a
-    - print file descriptors
+    - misc. debug
 
 
 
@@ -82,7 +79,7 @@ Execution decode
 
 Breakpoint
 ^^^^^^^^^^
-You might want to halt the program and printout various information
+You might want to halt the program and print out various information
 when the Program Counter reaches a certain address. To do this:
 
 .. code-block:: text
