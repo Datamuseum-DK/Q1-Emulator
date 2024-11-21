@@ -12,7 +12,7 @@ are alse referred to in the Q1 documentation as **id records** and
   :width: 800
   :align: center
 
-  Q1 floppy disk format. Blue lines show which fields are included in the
+  Q1 floppy disk format. Blue lines show the fields that are included in the
   checksum.
 
 
@@ -20,25 +20,25 @@ The ID record is always seven bytes long and consist of 0x9e followed by the
 track number, the record number, the checksum, and the trailing
 bytes 0x10, 0x00, 0x00.
 
-The data record starts with 0x9b followed by a block of data, followed by
-the checksum and the trailing 0x10, 0x00, 0x00.
+The data record starts with 0x9b followed by N bytes of application data,
+followed by the checksum and the trailing 0x10, 0x00, 0x00.
 
-The trailing 0x00's are not used upon reading a record from the disk. However,
-write operations write these zeroes.
+The trailing 0x00's are not used/address when reading a record from the disk.
+However, for write operations these zeroes are written to disk.
 
 
 .. note::
 
-  The inconsistency of the checksum which covers 0x9e for id records
+  There is an inconsistency of the checksum, which covers 0x9e for id records
   but excludes 0x9b for data records. This caused me a lot of frustration and
   kept me from progress for several days.
 
-There are three separate types of data records: INDEX files, program files
+There are three distinct types of data records: INDEX files, program files
 and (generic) data files.
 
-All data records on a track have the same size called the record size. The
-record size only includes the user data (light blue in the figure) and
-not the 0x9b, the checksum or the trailing bytes.
+All data records on a track have the same size called the **record size**. The
+record size is the size, N, of the application data (light blue in the figure).
+Thus is does not include the 0x9b, the checksum or the trailing bytes.
 
 Record sizes can range from 1 byte to 255 bytes.
 
@@ -61,16 +61,17 @@ p. 18:
   zeroed.
 
 
+
 Program files
 ^^^^^^^^^^^^^
 
 These are executable programs. Record sizes are 255 and multiple tracks
 may be used.
 
-A loadable file consists of a consecutive sequence of blocks. The maximum size
-for a block is 255. Each block has a one- dbyte block separator, a two-byte address
-for where the data should be loaded and a one-byte length field. The separator
-can have any value, but 0 marks the end of the data in that record.
+A loadable file consists of consecutive sequences of blocks. The maximum size
+for a block is 255. Each block consists of a one-byte block separator, a two-byte
+load address, a one-byte length field and M bytes of data. The separator
+can have any value except 0 which marks the end of the data in that record.
 
 .. note::
 
@@ -93,9 +94,10 @@ Loading a program will then be a sequence of actions like
     load 100 bytes at 0xa100
     etc.
 
-For an executable program, the last block typically loads two bytes into
-the address 0x4081. Address 0x4080 contains a jump (jp) opcode and this is
-the entry point for the loaded program (ROS Users Manual p.2).
+For an executable program, the last block typically loads two bytes
+at address 0x4081. Address 0x4080 contains a jump (jp) opcode and
+combined with the two loaded bytes this jumps to the entry point for the
+loaded program (ROS Users Manual p.2).
 
 The following is an example retrieved from the SCR program (z80 assembler)
 which only occupies a single record of track 1.
@@ -114,6 +116,11 @@ which only occupies a single record of track 1.
 
   separator 0x0d: load   2 bytes into address 0x4081
   4081 00 43
+
+So the entry point for SCR is at address 0x4300. The loader will call
+address 0x4080 to start the program:
+
+    > 4080 C3 00 43 ; jp 0x4300
 
 
 Generic data files

@@ -3,10 +3,10 @@ Q1-Lite
 =======
 
 To work with the Q1 it is important to understand that the Q1 operating system
-has no built-in commands. As far as I can tell, not a single one.
+(ROS) has no built-in commands. As far as I can tell, not a single one.
 
 All there is is keyboard input with some line editing support such as backspace,
-tab and delete.
+tab and delete and a program loader.
 
 The user types in a command, which is interpreted as the name
 of a program located on one of the disks. This program is then loaded and

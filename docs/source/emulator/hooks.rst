@@ -6,7 +6,7 @@ Python modules
 The z80 emulator currently used is written by Ivan Kosarev.
 https://github.com/kosarev/z80
 
-In addition to this a few python modules have been written
+In addition to this, a few python modules have been written
 to provide useful abstractions:
 
 

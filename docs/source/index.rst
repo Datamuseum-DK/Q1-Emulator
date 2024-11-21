@@ -30,12 +30,12 @@ from ROMs.
         :maxdepth: 3
         :hidden:
 
-        background/roms
+        background/filesys
         background/q1io
         background/q1_io_keyboard
         background/printer
-        background/disk
-        emulator/filesys
+        background/roms
+
 
 
     .. toctree::
@@ -56,6 +56,7 @@ from ROMs.
         emulator/emulator
         emulator/disassembler
         emulator/running
+        emulator/diskimage
         emulator/annotate
         background/log
 

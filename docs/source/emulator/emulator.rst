@@ -11,7 +11,7 @@ with **programs** by a **loader** and IO devices are initialised: **display buff
 is cleared and **disk** is populated with a **filesystem**. These abstractions
 are described in the :ref:`python_modules` section.
 
-Once the initialisation is done the emulator enters a repeated series of single
+Once the initialisation is done, the emulator enters a repeated series of
 instruction **steps**.
 
 
@@ -44,7 +44,7 @@ The emulator can be run with disassembly:
   01f3 01 09 00     ; ld bc, 0x9      | SP=4080, A=04    BC=0000, DE=4080, HL=003f
 
 
-However, for interactive sessions it is better to skip periodic hexdump and
+However, for interactive sessions it is better to skip disassembly and
 instruction decode, and use the display emulator:
 
 .. figure:: ../images/displayemu.png
