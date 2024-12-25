@@ -6,11 +6,13 @@
 import progs.jdc
 import progs.misc
 import progs.peeldk
+import progs.lmc
 
 proglist = {
         "peeldk"    : progs.peeldk.peeldk,
         "iws"       : progs.peeldk.iws,
         "jdc"       : progs.jdc.jdc,
+        "lmc"       : progs.lmc.lmc,
         "psmcadd"   : progs.jdc.psmcadd,
         "psmcmul"   : progs.jdc.psmcmul,
         "psmcdiv"   : progs.jdc.psmcdiv,

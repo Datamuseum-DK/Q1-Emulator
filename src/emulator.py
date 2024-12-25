@@ -7,6 +7,7 @@ import devices.kbd as kbd
 import match
 import ros as r
 import devices.z80io as z80io
+import devices.i8080io as i8080io
 import progs.programs as prg
 import utils.misc as misc
 import utils.udptx as udp
@@ -49,13 +50,16 @@ class Emulator:
         self.funcs = self.prgobj["funcs"]
 
         self.cpu = c.Cpu(self.prgobj)
-        self.defaultsteps = 103
+        self.defaultsteps = 103 # set to 1 for disassembly debug
         self.steps = self.defaultsteps
 
         #floppydisks = [datamuseum.fs, , fluxsamples.fs]
         floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs, artificial.fs]
         harddisks = [datamuseum.fs, debugdisk.fs]
-        self.io = z80io.IO(self.cpu.m, floppydisks, harddisks)
+        if args.program == 'lmc':
+            self.io = i8080io.IO(self.cpu.m, floppydisks, harddisks)
+        else:
+            self.io = z80io.IO(self.cpu.m, floppydisks, harddisks)
 
         self.ros = r.ROS(self.cpu.mem)
         self.key = kbd.Key()
