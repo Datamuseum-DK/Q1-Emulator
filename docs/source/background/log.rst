@@ -698,3 +698,28 @@ emulator to exit. This should be investigated.
 Neither image fully runs. For example for **iws** DINDEX cannot be started
 without adding a command line argument such as 'DINDEX 1' and for **peeldk**
 the program seems not to be loaded at all.
+
+2024 12 19
+----------
+
+Spent an evening reading Achim's floppies with KryoFlux together with
+Poul-Henning.
+
+2024 12 25
+----------
+
+Got ROM images for a Gen.2 Q1 (Q1-LMC). Added LMC specific io abstraction. Was
+able to execute, but so far no great progress.
+
+
+2024 12 26
+----------
+
+The last week had quite a lot of activity. Using the ft_cache files and
+a homegrown python utility a lot of information has been extracted from
+the floppies including a long list of filenames on the disks. This brief
+update is not going to mention any details, however.
+
+The great news is that it looks like we have a large number of source code,
+data records and executable programs that will allow me to test and refine
+the emulator.

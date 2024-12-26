@@ -188,7 +188,7 @@ jdc = {
         0x0fd9: 'no, return ok?',
         0x0fea: '# records = 0x58 (88)',
         0x0fef: 'Records per Track = 0x82 (130)',
-        0x0ff8: 'Record Length = 0x28 (24)',
+        0x0ff8: 'Record Length = 0x28 (40)',
         0x1094: 'set ERC (error count) to 32',
         0x1103: 'is end of record?',
         0x112d: 'jump to return of (unknown) disk function',
@@ -483,7 +483,7 @@ jdc = {
         [0x0de1, 0x0e4e, 'text strings - INDEX .. WEIRD ERR'],
         [0x0e4f, 0x0fb7, 'key search()'],
         [0x0fb8, 0x0fe0, 'write()'],
-        [0x0fe1, 0x0fff, 'Setup disk: Records:88, Rec per Track: 130, Rec len 24 bytes'],
+        [0x0fe1, 0x0fff, 'Setup INDEX: Records:88, Rec per Track: 130, Rec len 40 bytes'],
 
         # 1000 - 17ff marked as unused in ROS Manual!
         [0x1000, 0x1002, 'UNEXPLORED'],
