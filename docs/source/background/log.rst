@@ -723,3 +723,35 @@ update is not going to mention any details, however.
 The great news is that it looks like we have a large number of source code,
 data records and executable programs that will allow me to test and refine
 the emulator.
+
+
+2024 12 27
+----------
+
+Fixed a bug allowing the emulator to write to 'ROM'. Discovered while
+accidentally executing source code as a program.
+
+
+2024 12 28
+----------
+
+Created a python script to generate emulator compatible disk images from
+ft_cache files. Successfully ran the PL1 compiler on a program I made to
+calculate Fibonacci sequences.
+
+.. figure:: ../images/fibonacci.png
+  :width: 400
+  :align: center
+
+  Fibonacci numbers. Formatted printing in PL/I.
+
+
+.. figure:: ../images/firstpl1prg.png
+  :width: 400
+  :align: center
+
+  My first ever PL/I program.
+
+
+This marks a significant milestone as this was one of the goals for the Q1
+emulator project.
