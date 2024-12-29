@@ -11,10 +11,7 @@ import devices.i8080io as i8080io
 import progs.programs as prg
 import utils.misc as misc
 import utils.udptx as udp
-import disks.debugdisk.image as debugdisk
-import disks.datamuseum.image as datamuseum
-import disks.fluxsamples.image as fluxsamples
-import disks.artificial.image as artificial
+import disks.disks as disks
 from timeit import default_timer as timer
 #from multiprocessing import shared_memory
 
@@ -33,6 +30,7 @@ class Emulator:
             #print(f"write to ROM (0x{address:04x}) error, exiting ...")
             print(f"write to ROM (0x{address:04x}), pc {self.cpu.m.pc} warning, no effect ...")
             #self.cpu.exit()
+            return
 
         self.cpu.m.memory[address] = value
         #self.shm.buf[address] = value
@@ -53,9 +51,9 @@ class Emulator:
         self.defaultsteps = 103 # set to 1 for disassembly debug
         self.steps = self.defaultsteps
 
-        #floppydisks = [datamuseum.fs, , fluxsamples.fs]
-        floppydisks = [datamuseum.fs, debugdisk.fs, fluxsamples.fs, artificial.fs]
-        harddisks = [datamuseum.fs, debugdisk.fs]
+        floppydisks = [disks.disks[x.strip()].fs for x in args.disks.split(',')]
+        harddisks = []
+
         if args.program == 'lmc':
             self.io = i8080io.IO(self.cpu.m, floppydisks, harddisks)
         else:
@@ -69,12 +67,6 @@ class Emulator:
         self.cpu.m.set_write_callback(self.on_write)
         self.cpu.m.set_input_callback(self.io.handle_io_in)
         self.cpu.m.set_output_callback(self.io.handle_io_out)
-
-        # self.shm = shared_memory.SharedMemory(
-        #     name="shm_q1",
-        #     create=True,
-        #     size=65535)
-        # print(self.shm.name)
 
         self.stoppc = 0x1ffff
         if "stop" in self.prgobj:
@@ -250,22 +242,37 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-b", "--breakpoint", help = "stop on BP, hexdump and backtrace",
-        type = auto_int, default = 0x1FFFF)
-    parser.add_argument("-t", "--trigger", help = "start decode at trigger address",
-        type = auto_int, default = 0x1FFFF)
-    parser.add_argument("-s", "--stopafter", help = "stop after N instructions",
-        type = int, default = -1)
-    parser.add_argument("-p", "--poi", help = "Point of interest (PC)",
+    parser.add_argument("-b", "--breakpoint",
+                        help = "stop on BP, hexdump and backtrace",
+                        type = auto_int, default = 0x1FFFF)
+    parser.add_argument("-t", "--trigger",
+                        help = "start decode at trigger address",
+                        type = auto_int, default = 0x1FFFF)
+    parser.add_argument("-s", "--stopafter",
+                        help = "stop after N instructions",
+                        type = int, default = -1)
+    parser.add_argument("-p", "--poi",
+                        help = "Point of interest (PC)",
                         type = auto_int, default = 0x1ffff)
-    parser.add_argument("--dumpfreq", help = "Hexdump every N instruction",
+    parser.add_argument("--dumpfreq",
+                        help = "Hexdump every N instruction",
                         type = int, default = 256)
-    parser.add_argument("-x", "--hexdump", help = "Toggle hexdump", action='store_true')
-    parser.add_argument("-d", "--decode", help = "Decode instructions", action='store_true')
-    parser.add_argument("-l", "--list", help = "show available programs",
+    parser.add_argument("-x", "--hexdump",
+                        help = "Toggle hexdump",
+                        action='store_true')
+    parser.add_argument("-d", "--decode",
+                        help = "Decode instructions",
+                        action='store_true')
+    parser.add_argument("-l", "--list",
+                        help = "show available programs",
         action='store_true')
-    parser.add_argument("--program", help = "name of program to load, see programs.py",
-                        type = str, default = "jdc")
+    parser.add_argument("--program",
+                        help = "name of program to load, see programs.py",
+                        type = str,
+                        default = "jdc")
+    parser.add_argument("--disks",
+                        help = "load disk images",
+                        type = str, default = 'prgdsk, f1610, mjc')
 
 
     args = parser.parse_args()

@@ -3,7 +3,7 @@
 import curses
 import socket
 
-width = 40
+width = 47
 height = 12
 stdscr = curses.initscr()
 curses.resize_term(height+2, width+2)

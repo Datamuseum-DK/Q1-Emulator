@@ -4,10 +4,11 @@ import utils.udptx as udp
     Display emulator for Q1
 '''
 
+subst = {'[':'Ä', ']':'Å', '\\':'Ö', '}':'å', '|':'ö', '{':'ä'}
 
 class Display:
 
-    def __init__(self, height=12, width=40):
+    def __init__(self, height=12, width=47):
         self.w = width
         self.h = height
         self.pos = (0,0)
@@ -31,6 +32,8 @@ class Display:
     def data(self, char):
         if 32 <= ord(char) < 127:
             x, y = self.pos
+            # if char in subst:
+            #     char = subst[char]
             self.buffer[y][x] = char
         self._incx()
 
