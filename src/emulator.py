@@ -33,12 +33,9 @@ class Emulator:
             return
 
         self.cpu.m.memory[address] = value
-        #self.shm.buf[address] = value
 
 
     def __del__(self):
-        #self.shm.close()
-        #self.shm.unlink()
         pass
 
 
@@ -103,9 +100,7 @@ class Emulator:
                 drive = input("enter drive (1-7):\n")
                 track = input("enter track:\n")
                 self.io.floppy.disk.drives[int(drive)-1].dump(int(track))
-                # self.ros.index()
-                # self.ros.file()
-                # self.ros.disk()
+
             # Q1 Keyboard input below
             elif ch == kc.ikey("HEX"):
                 self.int38(kc.okey("HEX"))
