@@ -38,6 +38,14 @@ from ROMs.
 
 
     .. toctree::
+        :caption: Floppy disks
+        :maxdepth: 3
+        :hidden:
+
+        floppies/catalog.rst
+
+
+    .. toctree::
         :caption: PL/1
         :maxdepth: 3
         :hidden:
