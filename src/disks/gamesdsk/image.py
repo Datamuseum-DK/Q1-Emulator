@@ -2,12 +2,12 @@
 import sys
 sys.path.insert(0, '../..')
 
-from disks.f1578 import f1578
+from disks.gamesdsk import gamesdsk
 import filesys
 
 
 fs = filesys.FileSys()
-fs.loadtracks(f1578.data)
+fs.loadtracks(gamesdsk.data)
 
 
 if __name__ == '__main__':
