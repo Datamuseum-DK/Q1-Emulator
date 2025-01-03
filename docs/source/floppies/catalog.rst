@@ -14,7 +14,7 @@ Forening owns. This is a Q1-Lite with 'JDC' ROMs.
 
 This is also accounting related.
 
-One file mentions Q1 variants: "Q1 - LITE/JACKIE" and "Q1 - MAGNUS". 
+One file mentions Q1 variants: "Q1 - LITE/JACKIE" and "Q1 - MAGNUS".
 
 
 .. code-block:: text
@@ -39,6 +39,9 @@ from the color of the cardboard. In this set there are 42 floppies.
 These disks have all been assigned an official DDF artifact number. These
 range from 50001575 - 50001616. Here they are often referred to as for example
 **f1610** ommitting the 5000 prefix.
+
+
+:ref:`f1578`
 
 
 .. code-block:: text

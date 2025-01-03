@@ -275,8 +275,10 @@ if __name__ == "__main__":
         args.stopafter = 1000000000
 
     if args.list:
-        for p in prg.proglist:
-            print(p)
+        print('\nExecutable programs')
+        print(', '.join([x for x in prg.proglist]))
+        print('\nLoadable disk images')
+        print(', '.join([x for x in disks.disks]))
         sys.exit()
 
     emulator = Emulator(args)

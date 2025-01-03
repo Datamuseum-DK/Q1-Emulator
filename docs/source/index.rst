@@ -43,6 +43,7 @@ from ROMs.
         :hidden:
 
         floppies/catalog.rst
+        floppies/exeprogs.rst
 
 
     .. toctree::
