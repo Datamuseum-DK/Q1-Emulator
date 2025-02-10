@@ -755,3 +755,23 @@ calculate Fibonacci sequences.
 
 This marks a significant milestone as this was one of the goals for the Q1
 emulator project.
+
+
+2025 02 09
+----------
+
+Mattis extracted the character bitmaps for Q1 LMC. I hop this can help improve
+my understanding of the keyboard layout and shift keys. Two ROMs were decoded.
+
+.. figure:: ../images/lmcchargen1.png
+  :width: 400
+  :align: center
+
+  MT32xx Chargen ROM I
+
+
+.. figure:: ../images/lmcchargen2.png
+  :width: 400
+  :align: center
+
+  MT32xx Chargen ROM II

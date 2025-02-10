@@ -16,8 +16,10 @@ class Cpu:
         self.bt = [] # backtrace
         self.program = program
         self.e = z80
-        self.m = z80.Z80Machine()
+        #self.m = z80.Z80Machine()
+        self.m = z80.I8080Machine()
         self.b = z80.Z80InstrBuilder()
+
         self.mem = memory.Memory(self.m)
         self.ros = r.ROS(self.mem)
         self.fill = 0xfd
@@ -93,8 +95,8 @@ class Cpu:
             a_str = '   '
         m = self.m
         l = f'{m.pc:04x} {ibytes:12} ; {inst:25} | sp={m.sp:04x}, ' + \
-            f'a={m.a:02x}{a_str} bc={m.bc:04x}, de={m.de:04x}, hl={m.hl:04x}, ' + \
-            f'ix={m.ix:04x}, iy={m.iy:04x}'
+            f'a={m.a:02x}{a_str} bc={m.bc:04x}, de={m.de:04x}, hl={m.hl:04x}, '# + \
+            #f'ix={m.ix:04x}, iy={m.iy:04x}'
         self.bt.append(l)
         if len(self.bt) == 10:
             self.bt = self.bt[1:]

@@ -31,7 +31,6 @@ class Emulator:
             print(f"write to ROM (0x{address:04x}), pc {self.cpu.m.pc} warning, no effect ...")
             #self.cpu.exit()
             return
-
         self.cpu.m.memory[address] = value
 
 
@@ -45,7 +44,7 @@ class Emulator:
         self.funcs = self.prgobj["funcs"]
 
         self.cpu = c.Cpu(self.prgobj)
-        self.defaultsteps = 103 # set to 1 for disassembly debug
+        self.defaultsteps = 1#03 # set to 1 for disassembly debug
         self.steps = self.defaultsteps
 
         floppydisks = [disks.disks[x.strip()].fs for x in args.disks.split(',')]
@@ -60,10 +59,20 @@ class Emulator:
         self.key = kbd.Key()
         self.kc = kbd.KeyboardCodes()
 
+
+
         self.cpu.reset()
         self.cpu.m.set_write_callback(self.on_write)
         self.cpu.m.set_input_callback(self.io.handle_io_in)
         self.cpu.m.set_output_callback(self.io.handle_io_out)
+
+        # if args.program == 'lmc': # skip CLRDK
+        #     self.cpu.m.memory[0x1f7] = 0
+        #     self.cpu.m.memory[0x1f8] = 0
+        #     self.cpu.m.memory[0x1f9] = 0
+        #     self.cpu.m.memory[0x247] = 0
+        #     self.cpu.m.memory[0x248] = 0
+        #     self.cpu.m.memory[0x249] = 0
 
         self.stoppc = 0x1ffff
         if "stop" in self.prgobj:

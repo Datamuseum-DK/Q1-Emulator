@@ -31,20 +31,22 @@ class IO:
         self.go = 0
         self.stop = 0
         self.timeout = False
+        self.in0count = 0
+        self.timeron = False
 
-        #self.register_in_cb( 0x00, self.handle_rtc_in)
+        self.register_in_cb( 0x00, self.handle_rtc_in)
         # self.register_out_cb(0x00, self.handle_rtc_out)
-        # self.register_in_cb( 0x01, self.handle_key_in)
-        # self.register_out_cb(0x01, self.handle_key_out)
+        self.register_in_cb( 0x01, self.handle_key_in)
+        self.register_out_cb(0x01, self.handle_key_out)
         self.register_out_cb(0x03, self.handle_display_out)
         self.register_out_cb(0x04, self.handle_display_out_ctrl)
-        #self.register_in_cb( 0x04, self.handle_display_in)
+        self.register_in_cb( 0x04, self.handle_display_in)
 
         # Serial impact printer
-        # self.register_in_cb( 0x05, self.handle_printer_in_5)
+        self.register_in_cb( 0x05, self.handle_printer_in_5)
         # self.register_out_cb(0x05, self.handle_printer_out_5)
         # self.register_out_cb(0x06, self.handle_printer_out_6)
-        # self.register_out_cb(0x07, self.handle_printer_out_7)
+        self.register_out_cb(0x07, self.handle_printer_out_7)
         # Dot Matrix Printer
         # self.register_in_cb( 0x08, self.handle_printer_in_8)
         # Floppy disk - 8" ?
@@ -62,11 +64,13 @@ class IO:
         # self.register_in_cb( 0x11, self.handle_in_11)
         # self.register_out_cb(0x11, self.handle_out_11)
 
-        # Floppy Disk - 5.25" ?
+        # Floppy Disk - 8" ?
         # self.register_in_cb( 0x19, self.handle_disk_in_19)
-        # self.register_in_cb( 0x1a, self.handle_disk_in_1a)
-        # self.register_out_cb(0x1a, self.handle_disk_out_1a)
-        # self.register_out_cb(0x1b, self.handle_disk_out_1b)
+        self.register_out_cb( 0x19, self.handle_disk_out_19)
+        self.register_in_cb( 0x1a, self.handle_disk_in_1a)
+        self.register_out_cb(0x1a, self.handle_disk_out_1a)
+        self.register_out_cb(0x1b, self.handle_disk_out_1b)
+        self.register_out_cb(0x1c, self.handle_disk_out_1c)
 
 
     ### Functions for registering and handling IO
@@ -83,20 +87,11 @@ class IO:
         if inaddr in self.incb:
             return self.incb[inaddr]()
 
-        if inaddr == 0x00:
-            udptx.send("fake in on addr 0x00, return 0x02")
-            return 0x02
-
-        if inaddr == 0x04:
-            udptx.send("fake in on addr 0x04, return 0x00")
-            return 0x00
-
         msg = f'0x{inaddr:02x} - unregistered input address at pc {self.m.pc:04x}, exiting'
         udptx.send(msg)
         print(msg)
         print()
         sys.exit()
-        return 0
 
 
     def handle_io_out(self, outaddr, outval):
@@ -107,17 +102,38 @@ class IO:
             msg = f'0x{outaddr:02x} - unregistered output address, value (0x{outval:02x})'
             udptx.send(msg)
             print(msg)
-            #sys.exit()
+            sys.exit()
 
 
     ### IO Handling functions
 
+
     ### Real Time Clock (RTC)
+
     def handle_rtc_in(self) -> int:
+        msg =''
+        if self.in0count == 0:
+            self.in0count = 1
+        else:
+            self.timeron = True
+
+        retval = 0
         if self.timeout:
             self.timeout = False
-            return 1 # Bit 0 is timeout
-        return 0
+            retval += 1
+            msg += 'timeout'
+        else:
+            msg += 'no timeout'
+
+        if not self.timeron:
+            retval += 2
+            msg += ', not running'
+        else:
+            msg += ', running'
+        udptx.send(f"0x00 in  - timer {retval}: {msg}")
+        return retval
+
+
 
     def handle_rtc_out(self, val):
         udptx.send(f"0x00 out - rtc: setting timeout value {val} not supported")
@@ -139,6 +155,8 @@ class IO:
 
 
     def handle_key_out(self, val):
+        modes ={0: 'mode 1 - lower case', 1: 'mode 2 - upper case',
+                2: 'mode 3 - upper legends', 4: 'mode 4 - additional chars'}
         desc = ''
         if val & 0x01: # click
             print('\a')
@@ -147,7 +165,7 @@ class IO:
             print('\a')
             desc += 'beep '
         mode = (val >> 2) & 0x3 + 1
-        desc += f'mode {mode}'
+        desc += f'mode {modes[mode]}'
         if val & 0x10:
             desc += 'K1 '
         if val & 0x20:
@@ -156,12 +174,14 @@ class IO:
             desc += 'K3 '
         if val & 0x80:
             desc += 'INS '
-        udptx.send(f'0x01 out - key: [{desc}]')
+        udptx.send(f'0x01 out - {val} key: [{desc}]')
 
 
     ### Display
 
     def handle_display_out(self, val):
+        if val > 127:
+            print(f'0x03 out - extended ascii: {chr(val)}')
         # if val not in [0x00, 0x20]:
         #     udptx.send(f'0x03 out - display out: 0x{val:02x}, {chr(val)}')
         self.display.data(chr(val))
@@ -170,7 +190,7 @@ class IO:
 
     def handle_display_in(self) -> int:
         udptx.send('0x04 in  - display status: 32 + 16 (Lite, 40 char)')
-        return 0xff
+        return 0x00
 
 
     def handle_display_out_ctrl(self, val) -> str:
@@ -308,12 +328,18 @@ class IO:
         # return retval
         return 0
 
+    def handle_disk_out_19(self, val):
+        # if val:
+        #     udptx.send(f'0x1a out - hdd (control 1 ) - (0x{val:02x})')
+        # self.hdd.control1(val)
+        pass
+
 
     def handle_disk_in_1a(self):
         # retval = self.hdd.status()
         # udptx.send(f'0x1a in  - hdd (status): {retval}')
         # return retval
-        return 0
+        return 0x7f
 
 
     def handle_disk_out_1a(self, val):
@@ -324,6 +350,12 @@ class IO:
 
 
     def handle_disk_out_1b(self, val):
+        # if val != 0:
+        #     udptx.send(f'0x1b out - hdd (control 2 ) - (0x{val:02x})')
+        # self.hdd.control2(val)
+        pass
+
+    def handle_disk_out_1c(self, val):
         # if val != 0:
         #     udptx.send(f'0x1b out - hdd (control 2 ) - (0x{val:02x})')
         # self.hdd.control2(val)
