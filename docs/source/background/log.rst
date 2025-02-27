@@ -775,3 +775,15 @@ my understanding of the keyboard layout and shift keys. Two ROMs were decoded.
   :align: center
 
   MT32xx Chargen ROM II
+
+
+2025 02 27
+----------
+
+Update of character ROM I
+
+.. figure:: ../images/lmcchargen1b.png
+  :width: 400
+  :align: center
+
+  MT32xx Chargen ROM I - complete
