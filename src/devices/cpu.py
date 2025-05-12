@@ -16,8 +16,11 @@ class Cpu:
         self.bt = [] # backtrace
         self.program = program
         self.e = z80
-        #self.m = z80.Z80Machine()
-        self.m = z80.I8080Machine()
+        if program == 'lmc':
+            self.m = z80.I8080Machine()
+        else:
+            self.m = z80.Z80Machine()
+
         self.b = z80.Z80InstrBuilder()
 
         self.mem = memory.Memory(self.m)

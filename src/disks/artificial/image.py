@@ -16,4 +16,5 @@ if __name__ == '__main__':
     track.info( 0, fs.data[0],   16,  40)
     track.info( 1, fs.data[1],   10,  79)
     track.info( 2, fs.data[2],   10,  79)
-    track.info( 3, fs.data[3],   3,  79)
+    track.info( 3, fs.data[3],    3,  79)
+    track.info( 4, fs.data[4],    9,  79)

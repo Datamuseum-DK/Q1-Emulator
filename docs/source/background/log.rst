@@ -787,3 +787,11 @@ Update of character ROM I
   :align: center
 
   MT32xx Chargen ROM I - complete
+
+
+2025 05 09
+----------
+
+As preparation for the Q1 talk at Datahistorisk Forening, did a few
+improvements. emulator step size is now configurable but defaults to 103
+instructions. It should be set to 1 for demonstrating live trace and backtrace.

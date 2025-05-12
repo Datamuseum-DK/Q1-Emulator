@@ -76,4 +76,5 @@ from ROMs.
         :hidden:
 
         background/information
+        background/q1people
         background/references

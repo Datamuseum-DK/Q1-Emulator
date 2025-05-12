@@ -44,7 +44,7 @@ class Emulator:
         self.funcs = self.prgobj["funcs"]
 
         self.cpu = c.Cpu(self.prgobj)
-        self.defaultsteps = 1#03 # set to 1 for disassembly debug
+        self.defaultsteps = args.steps # set to 1 for disassembly debug
         self.steps = self.defaultsteps
 
         floppydisks = [disks.disks[x.strip()].fs for x in args.disks.split(',')]
@@ -87,6 +87,8 @@ class Emulator:
         kc = self.kc
         if self.key.kbhit():
             ch = ord(self.key.getch())
+            if 96 < ch < 127:
+                ch -= 32
             if misc.isprintable(ch):
                 print(f'{chr(ch)}')
             else:
@@ -267,6 +269,9 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--decode",
                         help = "Decode instructions",
                         action='store_true')
+    parser.add_argument("--steps",
+                        help = "number of instruction decodes per loop",
+                        type = int, default = 103)
     parser.add_argument("-l", "--list",
                         help = "show available programs",
         action='store_true')
@@ -291,4 +296,7 @@ if __name__ == "__main__":
         sys.exit()
 
     emulator = Emulator(args)
-    emulator.run()
+    try:
+        emulator.run()
+    except:
+        pass
