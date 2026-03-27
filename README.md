@@ -19,4 +19,4 @@ See examples at https://q1-lite-emulator.readthedocs.io/en/latest/emulator.html
 
 ## License
 This project is licensed under the BSD-2 License see the [LICENSE](LICENSE)
-file for details.
+file for details. 
