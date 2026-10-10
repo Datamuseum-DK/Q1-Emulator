@@ -795,3 +795,30 @@ Update of character ROM I
 As preparation for the Q1 talk at Datahistorisk Forening, did a few
 improvements. emulator step size is now configurable but defaults to 103
 instructions. It should be set to 1 for demonstrating live trace and backtrace.
+
+2025 08 04
+----------
+
+Daphne, Daniel Alroy's daughter kindly provided me with some photos concerning the
+keyboard layout that I had not previously seen. These confirm my reverse engineering
+and qualified guesses.
+
+.. figure:: ../images/daphne_kbd3.png
+  :width: 400
+  :align: center
+
+  Keyboard character codes (presumably Q1 LMC)
+
+
+.. figure:: ../images/daphne_kbd2.png
+  :width: 400
+  :align: center
+
+  Keyboard layout with codes I (presumably Q1 LMC)
+
+
+.. figure:: ../images/daphne_kbd1.png
+  :width: 400
+  :align: center
+
+  Keyboard layout with codes II (presumably Q1 LMC)

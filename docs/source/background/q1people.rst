@@ -7,7 +7,7 @@ Q1 employees
 I happened to find a thread with comments from some Q1 employees. This is
 copied from internet archive of old-computers.com
 
-So far I have not been in contact with any of these people.
+So far I have not been in contact with any of these people besides Karl-Wilhelm Wacker.
 
 https://web.archive.org/web/20230205172525/https://old-computers.com/museum/forum.asp?c=1286&st=1
 
